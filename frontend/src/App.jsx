@@ -1,9 +1,13 @@
-import React from 'react'
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import LandingPage from './Pages/Common/LandingPage';
 
 const App = () => {
   return (
-    <div className="bg-green-500">KV</div>
-  )
-}
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+    </Routes>
+  );
+};
 
-export default App
+export default App;
