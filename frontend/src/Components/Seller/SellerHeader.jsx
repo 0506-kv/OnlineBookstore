@@ -24,14 +24,15 @@ const SellerHeader = () => {
 
     const navItems = [
         { label: 'Home', path: '/seller/home', icon: LayoutDashboard },
+        { label: 'My Books', path: '/seller/my-books', icon: BookOpen },
     ];
 
     return (
         <>
             <header
                 className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                        ? 'bg-white/95 backdrop-blur-xl shadow-lg border-b border-slate-200/60 py-2'
-                        : 'bg-white/80 backdrop-blur-md border-b border-slate-100 py-3'
+                    ? 'bg-white/95 backdrop-blur-xl shadow-lg border-b border-slate-200/60 py-2'
+                    : 'bg-white/80 backdrop-blur-md border-b border-slate-100 py-3'
                     }`}
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-8">
@@ -60,8 +61,8 @@ const SellerHeader = () => {
                                     key={item.path}
                                     onClick={() => navigate(item.path)}
                                     className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 group ${isActive
-                                            ? 'bg-cyan-50 text-cyan-600'
-                                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                        ? 'bg-cyan-50 text-cyan-600'
+                                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                                         }`}
                                 >
                                     <Icon className={`w-4.5 h-4.5 ${isActive ? 'text-cyan-600' : 'text-slate-400 group-hover:text-slate-600'}`} />
