@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Star, Truck, Shield, Clock, BookOpen, Heart, ChevronRight, Sparkles, Gift, Users, Award } from 'lucide-react';
-import Navbar from '../../Components/Navbar';
+import Navbar from "../../Components/Common/Navbar";
 
 const LandingPage = () => {
     const fadeInUp = {
