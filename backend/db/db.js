@@ -11,5 +11,3 @@ function connectToDb() {
 }
 
 module.exports = connectToDb;
-
-// this files connects to the mongodb database

@@ -2,8 +2,6 @@
 src/Pages/Common/LoginPage.jsx
 src/Pages/Common/RegisterPage.jsx
 
-src/Pages/Admin/AdminLogin.jsx
-src/Pages/Admin/AdminRegister.jsx
 src/Pages/User/UserLogin.jsx
 src/Pages/User/UserRegister.jsx
 src/Pages/Seller/SellerLogin.jsx

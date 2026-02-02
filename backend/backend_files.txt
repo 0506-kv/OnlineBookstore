@@ -1,0 +1,14 @@
+#user
+controllers/user.controller.js
+models/user.model.js
+routes/user.routes.js
+
+#Seller
+controllers/seller.controller.js
+models/seller.model.js
+routes/seller.routes.js
+
+#Admin
+controllers/admin.controller.js
+models/admin.model.js
+routes/admin.routes.js
