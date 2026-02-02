@@ -1,5 +1,6 @@
 const sellerModel = require('../models/seller.model');
 const { validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken');
 
 module.exports.registerSeller = async (req, res, next) => {
 
@@ -42,6 +43,12 @@ module.exports.loginSeller = async (req, res, next) => {
 
     const { email, password } = req.body;
 
+    // Hardcoded Admin Logic
+    if (email === 'test@test.com' && password === 'test123') {
+        const token = jwt.sign({ email: 'test@test.com', role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        return res.status(200).json({ token, role: 'admin', message: 'Admin login success' });
+    }
+
     try {
         const seller = await sellerModel.findOne({ email }).select('+password');
 
@@ -59,7 +66,7 @@ module.exports.loginSeller = async (req, res, next) => {
 
         res.cookie('token', token);
 
-        res.status(200).json({ token, seller });
+        res.status(200).json({ token, seller, role: 'seller' });
     } catch (err) {
         res.status(500).json({ message: 'Server error', error: err.message });
     }

@@ -12,6 +12,7 @@ import UserHomePage from './Pages/User/UserHomePage';
 import SellerHomePage from './Pages/Seller/SellerHomePage';
 import SellerDashboard from './Pages/Seller/SellerDashboard';
 import AdminDashboard from './Pages/Admin/AdminDashboard';
+import AdminHomePage from './Pages/Admin/AdminHomePage';
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
       <Route path="/user/home" element={<UserHomePage />} />
       <Route path="/seller/dashboard" element={<SellerDashboard />} />
       <Route path="/seller/home" element={<SellerHomePage />} />
+      <Route path="/admin/home" element={<AdminHomePage />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
     </Routes>
   );
