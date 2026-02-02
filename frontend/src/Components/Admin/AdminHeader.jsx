@@ -7,7 +7,7 @@ const AdminHeader = ({ admin }) => {
     const handleLogout = () => {
         localStorage.removeItem('adminToken');
         localStorage.removeItem('admin');
-        navigate('/admin/login');
+        navigate('/seller/login');
     };
 
     return (
@@ -18,10 +18,10 @@ const AdminHeader = ({ admin }) => {
             <nav style={styles.nav}>
                 <a href="/admin/control" style={styles.link}>Admin Control</a>
                 <a href="/admin/home" style={styles.link}>Dashboard</a>
-                <a href="/admin/books" style={styles.link}>Manage Books</a>
+                {/* <a href="/admin/books" style={styles.link}>Manage Books</a>
                 <a href="/admin/sellers" style={styles.link}>Sellers</a>
                 <a href="/admin/users" style={styles.link}>Users</a>
-                <a href="/admin/orders" style={styles.link}>Orders</a>
+                <a href="/admin/orders" style={styles.link}>Orders</a> */}
             </nav>
             <div style={styles.userSection}>
                 <span style={styles.userName}>Admin: {admin?.email || 'Admin'}</span>
