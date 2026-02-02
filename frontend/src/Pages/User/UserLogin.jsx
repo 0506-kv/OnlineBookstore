@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const UserLogin = () => {
@@ -8,7 +9,26 @@ const UserLogin = () => {
     const [focused, setFocused] = useState(null);
 
     useEffect(() => { setLoaded(true); }, []);
-    const handleSubmit = (e) => { e.preventDefault(); navigate('/user/dashboard'); };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, {
+                email: form.email,
+                password: form.password
+            });
+
+            if (response.status === 200) {
+                const { token, user } = response.data;
+                localStorage.setItem('token', token);
+                localStorage.setItem('user', JSON.stringify(user));
+                navigate('/user/home');
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            alert(error.response?.data?.message || "Login failed");
+        }
+    };
 
     return (
         <div style={s.container}>
