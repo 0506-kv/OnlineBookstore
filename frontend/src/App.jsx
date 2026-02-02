@@ -7,11 +7,8 @@ import SellerLogin from './Pages/Seller/SellerLogin';
 import RegisterPage from './Pages/Common/RegisterPage';
 import UserRegister from './Pages/User/UserRegister';
 import SellerRegister from './Pages/Seller/SellerRegister';
-import UserDashboard from './Pages/User/UserDashboard';
 import UserHomePage from './Pages/User/UserHomePage';
 import SellerHomePage from './Pages/Seller/SellerHomePage';
-import SellerDashboard from './Pages/Seller/SellerDashboard';
-import AdminDashboard from './Pages/Admin/AdminDashboard';
 import AdminHomePage from './Pages/Admin/AdminHomePage';
 import AdminControl from './Pages/Admin/AdminControl';
 
@@ -26,14 +23,15 @@ const App = () => {
       <Route path="/user/register" element={<UserRegister />} />
       <Route path="/seller/register" element={<SellerRegister />} />
 
-      {/* Dashboard Routes */}
-      <Route path="/user/dashboard" element={<UserDashboard />} />
+      {/* User Routes  */}
       <Route path="/user/home" element={<UserHomePage />} />
-      <Route path="/seller/dashboard" element={<SellerDashboard />} />
+
+      {/* Seller Routes */}
       <Route path="/seller/home" element={<SellerHomePage />} />
+
+      {/* Admin Routes */}
       <Route path="/admin/control" element={<AdminControl />} />
       <Route path="/admin/home" element={<AdminHomePage />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
     </Routes>
   );
 };
