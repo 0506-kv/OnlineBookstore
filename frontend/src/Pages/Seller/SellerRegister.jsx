@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 const SellerRegister = () => {
     const navigate = useNavigate();
@@ -23,11 +24,12 @@ const SellerRegister = () => {
                 const { token, seller } = response.data;
                 localStorage.setItem('token', token);
                 localStorage.setItem('seller', JSON.stringify(seller));
+                toast.success('Store registered successfully!');
                 navigate('/seller/home');
             }
         } catch (error) {
             console.error("Seller Registration error:", error);
-            alert(error.response?.data?.message || "Registration failed");
+            toast.error(error.response?.data?.message || "Registration failed");
         }
     };
 

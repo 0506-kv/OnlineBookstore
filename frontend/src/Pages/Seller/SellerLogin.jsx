@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 const SellerLogin = () => {
     const navigate = useNavigate();
@@ -24,15 +25,17 @@ const SellerLogin = () => {
 
                 if (role === 'admin') {
                     localStorage.setItem('role', 'admin');
+                    toast.success('Welcome back, Admin!');
                     navigate('/admin/control');
                 } else {
                     localStorage.setItem('seller', JSON.stringify(seller));
+                    toast.success('Login successful! Welcome back.');
                     navigate('/seller/home');
                 }
             }
         } catch (error) {
             console.error("Seller Login error:", error);
-            alert(error.response?.data?.message || "Login failed");
+            toast.error(error.response?.data?.message || "Login failed");
         }
     };
 

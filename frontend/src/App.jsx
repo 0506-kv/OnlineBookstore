@@ -12,29 +12,33 @@ import SellerHomePage from './Pages/Seller/SellerHomePage';
 import SellBooks from './Components/Seller/SellBooks';
 import AdminHomePage from './Pages/Admin/AdminHomePage';
 import AdminControl from './Pages/Admin/AdminControl';
+import { Toaster } from 'react-hot-toast';
 
 const App = () => {
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/user/login" element={<UserLogin />} />
-      <Route path="/seller/login" element={<SellerLogin />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/user/register" element={<UserRegister />} />
-      <Route path="/seller/register" element={<SellerRegister />} />
+    <>
+      <Toaster position="top-center" reverseOrder={false} />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/user/login" element={<UserLogin />} />
+        <Route path="/seller/login" element={<SellerLogin />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/user/register" element={<UserRegister />} />
+        <Route path="/seller/register" element={<SellerRegister />} />
 
-      {/* User Routes  */}
-      <Route path="/user/home" element={<UserHomePage />} />
+        {/* User Routes  */}
+        <Route path="/user/home" element={<UserHomePage />} />
 
-      {/* Seller Routes */}
-      <Route path="/seller/home" element={<SellerHomePage />} />
-      <Route path="/seller/my-books" element={<SellBooks />} />
+        {/* Seller Routes */}
+        <Route path="/seller/home" element={<SellerHomePage />} />
+        <Route path="/seller/my-books" element={<SellBooks />} />
 
-      {/* Admin Routes */}
-      <Route path="/admin/control" element={<AdminControl />} />
-      <Route path="/admin/home" element={<AdminHomePage />} />
-    </Routes>
+        {/* Admin Routes */}
+        <Route path="/admin/control" element={<AdminControl />} />
+        <Route path="/admin/home" element={<AdminHomePage />} />
+      </Routes>
+    </>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 const UserRegister = () => {
     const navigate = useNavigate();
@@ -23,11 +24,12 @@ const UserRegister = () => {
                 const { token, user } = response.data;
                 localStorage.setItem('token', token);
                 localStorage.setItem('user', JSON.stringify(user));
+                toast.success('Registration successful! Welcome to Readora.');
                 navigate('/user/home');
             }
         } catch (error) {
             console.error("Registration error:", error);
-            alert(error.response?.data?.message || "Registration failed");
+            toast.error(error.response?.data?.message || "Registration failed");
         }
     };
 
