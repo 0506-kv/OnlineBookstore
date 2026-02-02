@@ -24,7 +24,7 @@ const SellerLogin = () => {
 
                 if (role === 'admin') {
                     localStorage.setItem('role', 'admin');
-                    navigate('/admin/home');
+                    navigate('/admin/control');
                 } else {
                     localStorage.setItem('seller', JSON.stringify(seller));
                     navigate('/seller/home');

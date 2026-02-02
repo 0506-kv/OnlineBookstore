@@ -13,6 +13,7 @@ import SellerHomePage from './Pages/Seller/SellerHomePage';
 import SellerDashboard from './Pages/Seller/SellerDashboard';
 import AdminDashboard from './Pages/Admin/AdminDashboard';
 import AdminHomePage from './Pages/Admin/AdminHomePage';
+import AdminControl from './Pages/Admin/AdminControl';
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
       <Route path="/user/home" element={<UserHomePage />} />
       <Route path="/seller/dashboard" element={<SellerDashboard />} />
       <Route path="/seller/home" element={<SellerHomePage />} />
+      <Route path="/admin/control" element={<AdminControl />} />
       <Route path="/admin/home" element={<AdminHomePage />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
     </Routes>

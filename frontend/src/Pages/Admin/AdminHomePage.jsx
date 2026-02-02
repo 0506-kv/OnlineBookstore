@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AdminHeader from '../../Components/Admin/AdminHeader';
+import AdminFooter from '../../Components/Admin/AdminFooter';
 
 const AdminHomePage = () => {
     const navigate = useNavigate();
+    const [admin, setAdmin] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
+        const adminData = localStorage.getItem('admin');
 
         if (!token || role !== 'admin') {
             navigate('/seller/login');
         } else {
+            setAdmin(adminData ? JSON.parse(adminData) : { email: 'admin@bookstore.com' });
             setIsAdmin(true);
             setLoaded(true);
         }
@@ -27,33 +32,38 @@ const AdminHomePage = () => {
     if (!isAdmin) return null;
 
     return (
-        <div style={s.container}>
+        <div style={s.pageWrapper}>
             <style>{css}</style>
-            <div style={s.shapes}><div style={{ ...s.shape, ...s.s1 }} /><div style={{ ...s.shape, ...s.s2 }} /></div>
+            <AdminHeader admin={admin} />
 
-            <div style={{ ...s.card, opacity: loaded ? 1 : 0, transform: loaded ? 'translateY(0)' : 'translateY(20px)' }}>
-                <div style={s.header}>
-                    <div style={s.iconBox}>🛡️</div>
-                    <h1 style={s.title}>Admin Dashboard</h1>
-                    <p style={s.subtitle}>System Administration</p>
-                </div>
+            <div style={s.container}>
+                <div style={s.shapes}><div style={{ ...s.shape, ...s.s1 }} /><div style={{ ...s.shape, ...s.s2 }} /></div>
 
-                <div style={s.content}>
-                    <p style={s.welcome}>Welcome, Administrator</p>
-                    <div style={s.stats}>
-                        <div style={s.statItem}>
-                            <span style={s.statLabel}>Status</span>
-                            <span style={s.statValue}>Active</span>
-                        </div>
-                        <div style={s.statItem}>
-                            <span style={s.statLabel}>Privileges</span>
-                            <span style={s.statValue}>Full Access</span>
+                <div style={{ ...s.card, opacity: loaded ? 1 : 0, transform: loaded ? 'translateY(0)' : 'translateY(20px)' }}>
+                    <div style={s.header}>
+                        <div style={s.iconBox}>🛡️</div>
+                        <h1 style={s.title}>Admin Dashboard</h1>
+                        <p style={s.subtitle}>System Administration</p>
+                    </div>
+
+                    <div style={s.content}>
+                        <p style={s.welcome}>Welcome, Administrator</p>
+                        <div style={s.stats}>
+                            <div style={s.statItem}>
+                                <span style={s.statLabel}>Status</span>
+                                <span style={s.statValue}>Active</span>
+                            </div>
+                            <div style={s.statItem}>
+                                <span style={s.statLabel}>Privileges</span>
+                                <span style={s.statValue}>Full Access</span>
+                            </div>
                         </div>
                     </div>
+                    <button onClick={handleLogout} style={s.btn}>Logout</button>
                 </div>
-
-                <button onClick={handleLogout} style={s.btn}>Logout</button>
             </div>
+
+            <AdminFooter />
         </div>
     );
 };
@@ -61,7 +71,8 @@ const AdminHomePage = () => {
 const css = `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap'); * { margin:0;padding:0;box-sizing:border-box; } @keyframes pulse{0%,100%{opacity:.3}50%{opacity:.6}}`;
 
 const s = {
-    container: { minHeight: '100vh', background: 'linear-gradient(135deg, #1e293b, #0f172a)', fontFamily: "'DM Sans',sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', position: 'relative', overflow: 'hidden' },
+    pageWrapper: { minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'linear-gradient(135deg, #1e293b, #0f172a)', fontFamily: "'DM Sans',sans-serif" },
+    container: { flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', position: 'relative', overflow: 'hidden' },
     shapes: { position: 'fixed', inset: 0, zIndex: 0 },
     shape: { position: 'absolute', borderRadius: '50%', filter: 'blur(80px)', animation: 'pulse 6s ease-in-out infinite' },
     s1: { width: '350px', height: '350px', background: '#3b82f630', top: '-10%', right: '-5%' },
@@ -77,7 +88,6 @@ const s = {
     statItem: { background: '#f8fafc', padding: '1rem', borderRadius: '12px', textAlign: 'center', border: '1px solid #e2e8f0' },
     statLabel: { display: 'block', fontSize: '0.8rem', color: '#64748b', marginBottom: '0.25rem' },
     statValue: { display: 'block', fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' },
-    btn: { padding: '1rem', background: 'linear-gradient(135deg, #ef4444, #dc2626)', border: 'none', borderRadius: '12px', color: '#fff', fontSize: '1rem', fontWeight: 600, cursor: 'pointer', boxShadow: '0 8px 20px rgba(239,68,68,0.3)', transition: 'transform 0.2s', marginTop: 'auto' },
 };
 
 export default AdminHomePage;

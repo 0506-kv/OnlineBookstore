@@ -18,4 +18,6 @@ router.post('/login', [
     sellerController.loginSeller
 )
 
+router.get('/all', sellerController.allSellers);
+
 module.exports = router;

@@ -71,3 +71,12 @@ module.exports.loginSeller = async (req, res, next) => {
         res.status(500).json({ message: 'Server error', error: err.message });
     }
 }
+
+module.exports.allSellers = async (req, res, next) => {
+    try {
+        const sellers = await sellerModel.find();
+        res.status(200).json({ sellers });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+}
