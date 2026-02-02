@@ -24,16 +24,6 @@ const ROLES = [
         bgGradient: "from-emerald-50 to-teal-50",
         path: "/seller/register"
     },
-    {
-        id: "admin",
-        title: "Admin",
-        desc: "Apply for administrative access",
-        icon: ShieldCheck,
-        emoji: "🛡️",
-        gradient: "from-amber-500 to-orange-500",
-        bgGradient: "from-amber-50 to-orange-50",
-        path: "/admin/register"
-    }
 ];
 
 const RegisterPage = () => {

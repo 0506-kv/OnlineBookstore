@@ -26,17 +26,6 @@ const ROLES = [
         bgGradient: "from-emerald-50 to-teal-50",
         path: "/seller/login"
     },
-    {
-        id: "admin",
-        title: "Admin",
-        tagline: "Manage Everything",
-        desc: "Control users, content, and platform settings",
-        icon: ShieldCheck,
-        emoji: "🛡️",
-        gradient: "from-amber-500 to-orange-500",
-        bgGradient: "from-amber-50 to-orange-50",
-        path: "/admin/login"
-    },
 ];
 
 function RoleCard({ role, index }) {
