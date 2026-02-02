@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const SellerRegister = () => {
@@ -8,7 +9,27 @@ const SellerRegister = () => {
     const [focused, setFocused] = useState(null);
 
     useEffect(() => { setLoaded(true); }, []);
-    const handleSubmit = (e) => { e.preventDefault(); navigate('/seller/dashboard'); };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/sellers/register`, {
+                storename: form.store,
+                email: form.email,
+                password: form.password
+            });
+
+            if (response.status === 201) {
+                const { token, seller } = response.data;
+                localStorage.setItem('token', token);
+                localStorage.setItem('seller', JSON.stringify(seller));
+                navigate('/seller/home');
+            }
+        } catch (error) {
+            console.error("Seller Registration error:", error);
+            alert(error.response?.data?.message || "Registration failed");
+        }
+    };
 
     return (
         <div style={s.container}>

@@ -9,6 +9,7 @@ import UserRegister from './Pages/User/UserRegister';
 import SellerRegister from './Pages/Seller/SellerRegister';
 import UserDashboard from './Pages/User/UserDashboard';
 import UserHomePage from './Pages/User/UserHomePage';
+import SellerHomePage from './Pages/Seller/SellerHomePage';
 import SellerDashboard from './Pages/Seller/SellerDashboard';
 import AdminDashboard from './Pages/Admin/AdminDashboard';
 
@@ -27,6 +28,7 @@ const App = () => {
       <Route path="/user/dashboard" element={<UserDashboard />} />
       <Route path="/user/home" element={<UserHomePage />} />
       <Route path="/seller/dashboard" element={<SellerDashboard />} />
+      <Route path="/seller/home" element={<SellerHomePage />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
     </Routes>
   );
