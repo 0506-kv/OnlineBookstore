@@ -17,7 +17,7 @@ const AdminHomePage = () => {
         if (!token || role !== 'admin') {
             navigate('/seller/login');
         } else {
-            setAdmin(adminData ? JSON.parse(adminData) : { email: 'admin@bookstore.com' });
+            setAdmin(adminData ? JSON.parse(adminData) : { email: 'admin@readora.com' });
             setIsAdmin(true);
             setLoaded(true);
         }

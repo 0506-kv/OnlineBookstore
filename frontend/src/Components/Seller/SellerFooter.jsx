@@ -47,7 +47,7 @@ const SellerFooter = () => {
                             <span className="text-xl font-bold text-white tracking-tight">Seller Portal</span>
                         </div>
                         <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-                            Empowering sellers to manage their online bookstore with ease.
+                            Empowering sellers to manage Readora with ease.
                             Track your sales, manage inventory, and reach thousands of readers globally.
                         </p>
                         <div className="flex gap-3">

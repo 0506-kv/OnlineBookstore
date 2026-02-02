@@ -68,7 +68,7 @@ const RegisterPage = () => {
                     </motion.div>
 
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                        Join BookStore! 🎉
+                        Join Readora! 🎉
                     </h1>
                     <p className="text-xl text-gray-500">
                         Create your account and start your reading journey

@@ -46,7 +46,7 @@ const SellerRegister = () => {
                 <form style={s.form} onSubmit={handleSubmit}>
                     <div style={s.field}>
                         <label style={s.label}>Store Name</label>
-                        <input type="text" placeholder="My Bookstore" style={{ ...s.input, borderColor: focused === 's' ? '#06b6d4' : '#e2e8f0' }} value={form.store} onChange={e => setForm({ ...form, store: e.target.value })} onFocus={() => setFocused('s')} onBlur={() => setFocused(null)} required />
+                        <input type="text" placeholder="My Readora Store" style={{ ...s.input, borderColor: focused === 's' ? '#06b6d4' : '#e2e8f0' }} value={form.store} onChange={e => setForm({ ...form, store: e.target.value })} onFocus={() => setFocused('s')} onBlur={() => setFocused(null)} required />
                     </div>
                     <div style={s.field}>
                         <label style={s.label}>Email</label>

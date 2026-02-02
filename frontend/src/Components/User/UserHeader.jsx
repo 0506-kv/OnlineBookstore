@@ -13,7 +13,7 @@ const UserHeader = ({ user }) => {
     return (
         <header style={styles.header}>
             <div style={styles.logo}>
-                📚 BookStore
+                📚 Readora
             </div>
             <nav style={styles.nav}>
                 <a href="/user/home" style={styles.link}>Home</a>

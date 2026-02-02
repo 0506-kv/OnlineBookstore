@@ -5,7 +5,7 @@ const UserFooter = () => {
         <footer style={styles.footer}>
             <div style={styles.content}>
                 <div style={styles.section}>
-                    <h3 style={styles.title}>OnlineBookstore</h3>
+                    <h3 style={styles.title}>Readora</h3>
                     <p style={styles.text}>Your favorite place to buy and sell books.</p>
                 </div>
                 <div style={styles.section}>
@@ -18,12 +18,12 @@ const UserFooter = () => {
                 </div>
                 <div style={styles.section}>
                     <h4 style={styles.subtitle}>Contact</h4>
-                    <p style={styles.text}>Email: support@bookstore.com</p>
+                    <p style={styles.text}>Email: support@readora.com</p>
                     <p style={styles.text}>Phone: +1 234 567 890</p>
                 </div>
             </div>
             <div style={styles.copyright}>
-                &copy; {new Date().getFullYear()} OnlineBookstore. All rights reserved.
+                &copy; {new Date().getFullYear()} Readora. All rights reserved.
             </div>
         </footer>
     );

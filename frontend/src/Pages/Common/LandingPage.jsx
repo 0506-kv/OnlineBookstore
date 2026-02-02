@@ -33,7 +33,7 @@ const LandingPage = () => {
 
     const testimonials = [
         { name: 'Sarah Johnson', role: 'Book Lover', text: 'Amazing collection! Found rare books I was searching for years.', avatar: '👩‍💼' },
-        { name: 'Mike Chen', role: 'Student', text: 'Fast delivery and great prices. My go-to bookstore now!', avatar: '👨‍🎓' },
+        { name: 'Mike Chen', role: 'Student', text: 'Fast delivery and great prices. My go-to bookstore (Readora) now!', avatar: '👨‍🎓' },
         { name: 'Emily Davis', role: 'Teacher', text: 'The recommendations are spot on. Love this platform!', avatar: '👩‍🏫' }
     ];
 
@@ -76,7 +76,7 @@ const LandingPage = () => {
                                 className="inline-flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-full text-sm font-semibold shadow-lg shadow-emerald-500/25"
                             >
                                 <Sparkles size={18} />
-                                <span>#1 Rated Online Bookstore 2024</span>
+                                <span>#1 Rated Online Bookstore 2024 (Readora)</span>
                                 <Award size={18} />
                             </motion.div>
 
@@ -366,9 +366,9 @@ const LandingPage = () => {
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                         <div className={`absolute top-4 left-4 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg ${book.badge === 'Bestseller' ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white' :
-                                                book.badge === 'New' ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white' :
-                                                    book.badge === 'Popular' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' :
-                                                        'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
+                                            book.badge === 'New' ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white' :
+                                                book.badge === 'Popular' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' :
+                                                    'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
                                             }`}>
                                             {book.badge}
                                         </div>
@@ -466,7 +466,7 @@ const LandingPage = () => {
                                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
                                     <BookOpen size={24} />
                                 </div>
-                                <span className="text-2xl font-bold">BookStore</span>
+                                <span className="text-2xl font-bold">Readora</span>
                             </div>
                             <p className="text-gray-400 text-sm mb-6">
                                 Your trusted destination for discovering amazing books and stories that inspire.
@@ -504,7 +504,7 @@ const LandingPage = () => {
                         ))}
                     </div>
                     <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                        <p className="text-gray-500 text-sm">© 2024 BookStore. Made with ❤️ for book lovers</p>
+                        <p className="text-gray-500 text-sm">© 2024 Readora. Made with ❤️ for book lovers</p>
                         <div className="flex gap-6 text-gray-400 text-sm">
                             <a href="#" className="hover:text-emerald-400 transition-colors">Privacy</a>
                             <a href="#" className="hover:text-emerald-400 transition-colors">Terms</a>

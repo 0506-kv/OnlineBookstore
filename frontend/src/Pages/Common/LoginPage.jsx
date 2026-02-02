@@ -159,7 +159,7 @@ export default function LoginPage() {
                     className="mt-10 text-center"
                 >
                     <p className="text-gray-500 mb-6 text-lg">
-                        New to BookStore? <span className="text-2xl">🎉</span>
+                        New to Readora? <span className="text-2xl">🎉</span>
                     </p>
                     <Link to="/register">
                         <motion.button

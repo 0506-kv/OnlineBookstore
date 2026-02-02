@@ -6,7 +6,7 @@ const AdminFooter = () => {
             <div style={styles.content}>
                 <div style={styles.section}>
                     <h3 style={styles.title}>Admin Panel</h3>
-                    <p style={styles.text}>Manage your online bookstore efficiently and securely.</p>
+                    <p style={styles.text}>Manage Readora efficiently and securely.</p>
                 </div>
                 <div style={styles.section}>
                     <h4 style={styles.subtitle}>Quick Access</h4>
@@ -18,7 +18,7 @@ const AdminFooter = () => {
                 </div>
                 <div style={styles.section}>
                     <h4 style={styles.subtitle}>Admin Support</h4>
-                    <p style={styles.text}>Email: admin@bookstore.com</p>
+                    <p style={styles.text}>Email: admin@readora.com</p>
                     <p style={styles.text}>Support: +1 234 567 890</p>
                 </div>
                 <div style={styles.section}>
@@ -28,7 +28,7 @@ const AdminFooter = () => {
                 </div>
             </div>
             <div style={styles.copyright}>
-                &copy; {new Date().getFullYear()} OnlineBookstore Admin Panel. All rights reserved. | Secure Access Only
+                &copy; {new Date().getFullYear()} Readora Admin Panel. All rights reserved. | Secure Access Only
             </div>
         </footer>
     );
