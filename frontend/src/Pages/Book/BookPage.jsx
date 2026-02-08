@@ -71,6 +71,9 @@ const BookPage = () => {
     const [book, setBook] = useState(initialBook);
     const [loading, setLoading] = useState(!initialBook);
     const [error, setError] = useState('');
+    const [coverUrl, setCoverUrl] = useState('');
+    const [coverLoaded, setCoverLoaded] = useState(false);
+    const [coverSource, setCoverSource] = useState('');
 
     useEffect(() => {
         if (initialBook) {
@@ -109,11 +112,98 @@ const BookPage = () => {
     }, [id, initialBook]);
 
     const displayBook = book || FALLBACK_BOOK;
+    const coverTitle = displayBook?.name?.trim() || '';
+    const coverAuthor = displayBook?.author?.trim() || '';
+    const coverIsbn = String(displayBook?.isbn || '').replace(/[^0-9X]/gi, '');
+
+    useEffect(() => {
+        if (coverIsbn) {
+            setCoverSource('isbn');
+            return;
+        }
+        if (coverTitle || coverAuthor) {
+            setCoverSource('search');
+            return;
+        }
+        setCoverSource('');
+    }, [coverAuthor, coverIsbn, coverTitle]);
+
+    useEffect(() => {
+        let active = true;
+        const controller = new AbortController();
+        const setIfActive = (url) => {
+            if (active) setCoverUrl(url);
+        };
+
+        setCoverLoaded(false);
+
+        if (coverSource === 'isbn' && coverIsbn) {
+            setIfActive(`https://covers.openlibrary.org/b/isbn/${coverIsbn}-L.jpg?default=false`);
+            return () => {
+                active = false;
+                controller.abort();
+            };
+        }
+
+        if (coverSource === 'search') {
+            setIfActive('');
+            if (!coverTitle && !coverAuthor) {
+                return () => {
+                    active = false;
+                    controller.abort();
+                };
+            }
+            (async () => {
+                try {
+                    const params = new URLSearchParams();
+                    if (coverTitle) params.set('title', coverTitle);
+                    if (coverAuthor) params.set('author', coverAuthor);
+                    params.set('limit', '1');
+                    const response = await fetch(`https://openlibrary.org/search.json?${params.toString()}`, {
+                        signal: controller.signal
+                    });
+                    if (!response.ok) throw new Error('Cover search failed');
+                    const data = await response.json();
+                    const doc = data?.docs?.[0];
+                    const coverId = doc?.cover_i;
+                    const editionKey = doc?.edition_key?.[0];
+                    if (coverId) {
+                        setIfActive(`https://covers.openlibrary.org/b/id/${coverId}-L.jpg`);
+                    } else if (editionKey) {
+                        setIfActive(`https://covers.openlibrary.org/b/olid/${editionKey}-L.jpg`);
+                    }
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        console.error('Cover search error:', err);
+                    }
+                }
+            })();
+        } else {
+            setIfActive('');
+        }
+
+        return () => {
+            active = false;
+            controller.abort();
+        };
+    }, [coverAuthor, coverIsbn, coverSource, coverTitle]);
+
+    useEffect(() => {
+        setCoverLoaded(false);
+    }, [coverUrl]);
 
     const priceValue = Number(displayBook.price);
     const formattedPrice = Number.isFinite(priceValue)
         ? priceValue.toLocaleString('en-IN')
         : displayBook.price || '—';
+
+    const handleCoverError = () => {
+        if (coverSource === 'isbn') {
+            setCoverSource('search');
+            return;
+        }
+        setCoverUrl('');
+    };
 
     const sellerName = displayBook.sellerId?.storename || 'Readora Prime';
     const sellerLocation = displayBook.sellerId?.location || 'Jaipur, IN';
@@ -377,24 +467,51 @@ const BookPage = () => {
                                                     className="mx-auto w-full max-w-70"
                                                 >
                                                     <div className="relative aspect-3/4 overflow-hidden rounded-3xl border border-white/70 bg-[#0f172a] shadow-[0_30px_80px_rgba(15,118,110,0.25)]">
-                                                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.5),transparent_60%)]" />
-                                                        <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(15,118,110,0.6),rgba(30,41,59,0.6),rgba(249,115,22,0.5))]" />
-                                                        <div className="relative z-10 flex h-full flex-col justify-between p-6 text-white">
-                                                            <div className="space-y-2">
-                                                                <span className="text-xs uppercase tracking-[0.4em] text-white/70">
-                                                                    Cosmic Edition
-                                                                </span>
-                                                            <h2 className="text-2xl font-semibold leading-tight font-['Playfair_Display',serif]">
-                                                                    {displayBook.name.split(':')[0]}
-                                                                </h2>
+                                                        {coverUrl && (
+                                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                                <img
+                                                                    src={coverUrl}
+                                                                    alt={`${displayBook.name} cover`}
+                                                                    className={`max-h-full max-w-full object-contain brightness-110 contrast-105 saturate-105 transition-opacity duration-500 ${
+                                                                        coverLoaded ? 'opacity-100' : 'opacity-0'
+                                                                    }`}
+                                                                    onLoad={() => setCoverLoaded(true)}
+                                                                    onError={handleCoverError}
+                                                                    loading="lazy"
+                                                                    decoding="async"
+                                                                />
                                                             </div>
-                                                            <div className="space-y-1">
-                                                                <div className="text-sm uppercase tracking-[0.3em] text-white/70">
-                                                                    {displayBook.author}
+                                                        )}
+                                                        <div
+                                                            className={`absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.5),transparent_60%)] transition-opacity duration-500 ${
+                                                                coverLoaded ? 'opacity-0' : 'opacity-100'
+                                                            }`}
+                                                        />
+                                                        <div
+                                                            className={`absolute inset-0 bg-[linear-gradient(160deg,rgba(15,118,110,0.6),rgba(30,41,59,0.6),rgba(249,115,22,0.5))] transition-opacity duration-500 ${
+                                                                coverLoaded ? 'opacity-0' : 'opacity-100'
+                                                            }`}
+                                                        />
+                                                        {!coverLoaded && (
+                                                            <div className="relative z-10 flex h-full flex-col justify-between p-6 text-white">
+                                                                <div className="space-y-2">
+                                                                    <span className="text-xs uppercase tracking-[0.4em] text-white/70">
+                                                                        Cosmic Edition
+                                                                    </span>
+                                                                    <h2 className="text-2xl font-semibold leading-tight font-['Playfair_Display',serif]">
+                                                                        {displayBook.name.split(':')[0]}
+                                                                    </h2>
                                                                 </div>
-                                                                <div className="text-xs text-white/60">{displayBook.publisher}</div>
+                                                                <div className="space-y-1">
+                                                                    <div className="text-sm uppercase tracking-[0.3em] text-white/70">
+                                                                        {displayBook.author}
+                                                                    </div>
+                                                                    <div className="text-xs text-white/60">
+                                                                        {displayBook.publisher}
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        )}
                                                     </div>
                                                 </motion.div>
 
