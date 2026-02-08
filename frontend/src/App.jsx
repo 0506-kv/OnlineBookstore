@@ -9,6 +9,7 @@ import UserRegister from './Pages/User/UserRegister';
 import SellerRegister from './Pages/Seller/SellerRegister';
 import UserHomePage from './Pages/User/UserHomePage';
 import BuyBooks from './Pages/User/BuyBooks';
+import BookPage from './Pages/Book/BookPage';
 import SellerHomePage from './Pages/Seller/SellerHomePage';
 import SellBooks from './Pages/Seller/SellBooks';
 import AdminHomePage from './Pages/Admin/AdminHomePage';
@@ -35,6 +36,8 @@ const App = () => {
         <Route element={<UserProtectedRoute />}>
           <Route path="/user/home" element={<UserHomePage />} />
           <Route path="/user/buy" element={<BuyBooks />} />
+          <Route path="/user/book/:id" element={<BookPage />} />
+          <Route path="/user/book" element={<BookPage />} />
         </Route>
 
         {/* Seller Routes */}

@@ -190,6 +190,10 @@ const BuyBooks = () => {
                                         const category = book.category?.trim()
                                             ? book.category.trim()
                                             : 'Uncategorized';
+                                        const openBook = () => {
+                                            if (!book?._id) return;
+                                            navigate(`/user/book/${book._id}`, { state: { book } });
+                                        };
                                         return (
                                             <motion.article
                                                 key={book._id}
@@ -201,7 +205,16 @@ const BuyBooks = () => {
                                                 exit={{ opacity: 0, y: 12 }}
                                                 whileHover={{ y: -6 }}
                                                 transition={{ duration: 0.3 }}
-                                                className="group relative flex flex-col rounded-3xl border border-[#eadfd0] bg-white p-6 shadow-sm"
+                                                onClick={openBook}
+                                                onKeyDown={(event) => {
+                                                    if (event.key === 'Enter' || event.key === ' ') {
+                                                        event.preventDefault();
+                                                        openBook();
+                                                    }
+                                                }}
+                                                role="button"
+                                                tabIndex={0}
+                                                className="group relative flex flex-col rounded-3xl border border-[#eadfd0] bg-white p-6 shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f766e]/40 cursor-pointer"
                                             >
                                                 <div className="flex items-start justify-between">
                                                     <div className="grid h-12 w-12 place-items-center rounded-2xl bg-linear-to-br from-[#0f766e] to-[#0ea5a4] text-white text-lg font-semibold shadow-lg shadow-teal-200/60">
