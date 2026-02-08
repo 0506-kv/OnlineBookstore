@@ -126,8 +126,8 @@ const SellBooks = () => {
             <main className="flex-1 relative z-10 px-4 sm:px-6 lg:px-8 py-10 max-w-7xl mx-auto w-full">
                 {/* Background Blobs */}
                 <div className="fixed inset-0 pointer-events-none overflow-hidden select-none -z-10">
-                    <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-cyan-200/20 rounded-full blur-3xl animate-pulse" />
-                    <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-200/20 rounded-full blur-3xl animate-pulse" />
+                    <div className="absolute top-20 right-0 w-125 h-125 bg-cyan-200/20 rounded-full blur-3xl animate-pulse" />
+                    <div className="absolute bottom-0 left-0 w-125 h-125 bg-indigo-200/20 rounded-full blur-3xl animate-pulse" />
                 </div>
 
                 {/* Header Section */}
@@ -198,7 +198,7 @@ const SellBooks = () => {
                                             </div>
 
                                             <div className="flex items-start justify-between mb-4">
-                                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-cyan-500/20">
+                                                <div className="w-12 h-12 rounded-xl bg-linear-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-cyan-500/20">
                                                     {book.name.charAt(0).toUpperCase()}
                                                 </div>
                                                 {book.category && (

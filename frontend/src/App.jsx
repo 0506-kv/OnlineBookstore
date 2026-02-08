@@ -8,6 +8,7 @@ import RegisterPage from './Pages/Common/RegisterPage';
 import UserRegister from './Pages/User/UserRegister';
 import SellerRegister from './Pages/Seller/SellerRegister';
 import UserHomePage from './Pages/User/UserHomePage';
+import BuyBooks from './Pages/User/BuyBooks';
 import SellerHomePage from './Pages/Seller/SellerHomePage';
 import SellBooks from './Pages/Seller/SellBooks';
 import AdminHomePage from './Pages/Admin/AdminHomePage';
@@ -29,6 +30,7 @@ const App = () => {
 
         {/* User Routes  */}
         <Route path="/user/home" element={<UserHomePage />} />
+        <Route path="/user/buy" element={<BuyBooks />} />
 
         {/* Seller Routes */}
         <Route path="/seller/home" element={<SellerHomePage />} />
