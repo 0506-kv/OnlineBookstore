@@ -1,19 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { motion } from 'framer-motion';
-import { BookOpen, LayoutGrid, LogOut } from 'lucide-react';
+import { BookOpen, LayoutGrid, LogOut, ShoppingBag } from 'lucide-react';
 
 const navItems = [
     { label: 'Home', to: '/user/home', icon: LayoutGrid },
-    { label: 'Browse Books', to: '/user/buy', icon: BookOpen }
+    { label: 'Browse Books', to: '/user/buy', icon: BookOpen },
+    { label: 'Cart', to: '/user/cart', icon: ShoppingBag }
 ];
 
 const UserHeader = ({ user }) => {
     const navigate = useNavigate();
+    const [cartCount, setCartCount] = useState(0);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        let active = true;
+        const fetchCartCount = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/cart/my`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const items = response.data.cart?.items || [];
+                const count = items.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+                if (active) setCartCount(count);
+            } catch (err) {
+                console.error('Error fetching cart count:', err);
+            }
+        };
+
+        fetchCartCount();
+        return () => {
+            active = false;
+        };
+    }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        setCartCount(0);
         navigate('/user/login');
     };
 
@@ -63,6 +91,11 @@ const UserHeader = ({ user }) => {
                         >
                             <Icon className="h-4 w-4" />
                             {label}
+                            {to === '/user/cart' && cartCount > 0 && (
+                                <span className="ml-2 inline-flex min-w-6 items-center justify-center rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold text-[#0f766e]">
+                                    {cartCount}
+                                </span>
+                            )}
                         </NavLink>
                     ))}
                 </nav>
@@ -106,6 +139,11 @@ const UserHeader = ({ user }) => {
                         >
                             <Icon className="h-4 w-4" />
                             {label}
+                            {to === '/user/cart' && cartCount > 0 && (
+                                <span className="ml-2 inline-flex min-w-6 items-center justify-center rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold text-[#0f766e]">
+                                    {cartCount}
+                                </span>
+                            )}
                         </NavLink>
                     ))}
                 </div>

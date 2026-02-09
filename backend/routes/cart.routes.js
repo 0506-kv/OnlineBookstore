@@ -12,4 +12,12 @@ router.post('/add', [
 
 router.get('/my', authMiddleware.authUser, cartController.getMyCart);
 
+router.patch('/update', [
+    authMiddleware.authUser,
+    body('bookId').isMongoId().withMessage('Valid bookId is required'),
+    body('quantity').isInt({ min: 1 }).withMessage('Quantity must be at least 1').toInt(),
+], cartController.updateCartItem);
+
+router.delete('/remove/:bookId', authMiddleware.authUser, cartController.removeCartItem);
+
 module.exports = router;

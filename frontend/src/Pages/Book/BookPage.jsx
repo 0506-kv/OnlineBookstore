@@ -197,6 +197,26 @@ const BookPage = () => {
         ? priceValue.toLocaleString('en-IN')
         : displayBook.price || '—';
 
+    const handleAddToCart = async () => {
+        if (!displayBook?._id) return;
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/user/login');
+            return;
+        }
+
+        try {
+            await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/cart/add`,
+                { bookId: displayBook._id, quantity: 1 },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            navigate('/user/cart');
+        } catch (err) {
+            console.error('Error adding to cart:', err);
+        }
+    };
+
     const handleCoverError = () => {
         if (coverSource === 'isbn') {
             setCoverSource('search');
@@ -426,6 +446,7 @@ const BookPage = () => {
                                         <div className="flex flex-wrap gap-3">
                                             <button
                                                 type="button"
+                                                onClick={handleAddToCart}
                                                 className="inline-flex items-center gap-2 rounded-full bg-[#0f766e] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-200/70 transition hover:-translate-y-0.5"
                                             >
                                                 <ShoppingBag className="h-4 w-4" />
