@@ -37,4 +37,13 @@ router.patch('/seller/:id/status', [
         .toLowerCase()
 ], orderController.updateSellerOrderStatus);
 
+router.get('/admin/shipped', authMiddleware.authAdmin, orderController.getAdminShippedOrders);
+router.patch('/admin/:id/status', [
+    authMiddleware.authAdmin,
+    body('status')
+        .isIn(['delivered'])
+        .withMessage('Status must be delivered')
+        .toLowerCase()
+], orderController.updateAdminOrderStatus);
+
 module.exports = router;

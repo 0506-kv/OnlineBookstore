@@ -18,6 +18,7 @@ const AdminHeader = ({ admin }) => {
             <nav style={styles.nav}>
                 <a href="/admin/control" style={styles.link}>Admin Control</a>
                 <a href="/admin/home" style={styles.link}>Dashboard</a>
+                <a href="/admin/orders" style={styles.link}>Orders</a>
                 {/* <a href="/admin/books" style={styles.link}>Manage Books</a>
                 <a href="/admin/sellers" style={styles.link}>Sellers</a>
                 <a href="/admin/users" style={styles.link}>Users</a>

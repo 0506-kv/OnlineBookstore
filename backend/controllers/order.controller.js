@@ -172,3 +172,45 @@ module.exports.updateSellerOrderStatus = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: err.message });
     }
 };
+
+module.exports.getAdminShippedOrders = async (req, res) => {
+    try {
+        const orders = await orderModel
+            .find({ status: 'shipped' })
+            .sort({ createdAt: -1 })
+            .populate('userId', 'fullname email')
+            .populate('sellerId', 'storename email')
+            .populate('bookId', 'name author price');
+
+        res.status(200).json({ orders });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};
+
+module.exports.updateAdminOrderStatus = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const { status } = req.body;
+        const order = await orderModel.findById(req.params.id);
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        if (order.status !== 'shipped') {
+            return res.status(400).json({ message: 'Only shipped orders can be delivered' });
+        }
+
+        order.status = status;
+        await order.save();
+
+        res.status(200).json({ message: 'Order updated', order });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};
