@@ -175,26 +175,28 @@ const SellerOrders = () => {
                                                 </div>
                                             </div>
 
-                                            <div className="mt-4 flex flex-wrap gap-3">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => updateOrderStatus(order._id, 'shipped')}
-                                                    disabled={!canAct || updatingId === order._id}
-                                                    className="inline-flex items-center gap-2 rounded-full bg-cyan-50 px-4 py-2 text-xs font-semibold text-cyan-700 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
-                                                >
-                                                    <Truck className="h-4 w-4" />
-                                                    Dispatch
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => updateOrderStatus(order._id, 'cancelled')}
-                                                    disabled={!canAct || updatingId === order._id}
-                                                    className="inline-flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 text-xs font-semibold text-rose-600 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
-                                                >
-                                                    <XCircle className="h-4 w-4" />
-                                                    Cancel
-                                                </button>
-                                            </div>
+                                            {canAct && (
+                                                <div className="mt-4 flex flex-wrap gap-3">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => updateOrderStatus(order._id, 'shipped')}
+                                                        disabled={updatingId === order._id}
+                                                        className="inline-flex items-center gap-2 rounded-full bg-cyan-50 px-4 py-2 text-xs font-semibold text-cyan-700 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+                                                    >
+                                                        <Truck className="h-4 w-4" />
+                                                        Dispatch
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => updateOrderStatus(order._id, 'cancelled')}
+                                                        disabled={updatingId === order._id}
+                                                        className="inline-flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 text-xs font-semibold text-rose-600 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+                                                    >
+                                                        <XCircle className="h-4 w-4" />
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            )}
 
                                             {order.shippingAddress && (
                                                 <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-600">

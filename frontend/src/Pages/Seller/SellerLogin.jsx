@@ -30,7 +30,7 @@ const SellerLogin = () => {
                     localStorage.setItem('admin', JSON.stringify({ email: form.email }));
                     document.cookie = 'token=; Max-Age=0; path=/';
                     toast.success('Welcome back, Admin!');
-                    navigate('/admin/control');
+                    navigate('/admin/home');
                 } else {
                     localStorage.setItem('seller', JSON.stringify(seller));
                     toast.success('Login successful! Welcome back.');

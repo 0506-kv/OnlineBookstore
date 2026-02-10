@@ -80,7 +80,7 @@ const SellerHeader = () => {
                         className="flex items-center gap-2 px-5 py-2.5 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white rounded-lg text-sm font-semibold transition-all duration-300 shadow-sm shadow-red-500/10 hover:shadow-lg hover:shadow-red-500/30 hover:-translate-y-0.5 shrink-0"
                     >
                         <LogOut className="w-4.5 h-4.5" />
-                        <span className="hidden xs:block">Logout</span>
+                        <span>Logout</span>
                     </button>
                 </div>
             </header>

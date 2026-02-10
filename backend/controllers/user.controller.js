@@ -1,4 +1,6 @@
 const userModel = require('../models/user.model');
+const orderModel = require('../models/order.model');
+const reviewModel = require('../models/review.model');
 const { validationResult } = require('express-validator');
 
 module.exports.registerUser = async (req, res, next) => {
@@ -71,5 +73,32 @@ module.exports.allUsers = async (req, res, next) => {
         res.status(200).json({ users });
     } catch (err) {
         res.status(500).json({ message: 'Server error', error: err.message });
+    }
+}
+
+module.exports.deleteUser = async (req, res, next) => {
+    try {
+        const userId = req.params.id;
+        const user = await userModel.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const [reviewResult, orderResult] = await Promise.all([
+            reviewModel.deleteMany({ userId }),
+            orderModel.deleteMany({ userId, status: 'placed' })
+        ]);
+
+        await userModel.findByIdAndDelete(userId);
+
+        return res.status(200).json({
+            message: 'User deleted',
+            userId: user._id,
+            deletedReviews: reviewResult.deletedCount ?? 0,
+            deletedOrders: orderResult.deletedCount ?? 0
+        });
+    } catch (err) {
+        return res.status(500).json({ message: 'Server error', error: err.message });
     }
 }

@@ -1,4 +1,6 @@
 const sellerModel = require('../models/seller.model');
+const bookModel = require('../models/book.model');
+const orderModel = require('../models/order.model');
 const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 
@@ -78,5 +80,32 @@ module.exports.allSellers = async (req, res, next) => {
         res.status(200).json({ sellers });
     } catch (err) {
         res.status(500).json({ message: 'Server error', error: err.message });
+    }
+}
+
+module.exports.deleteSeller = async (req, res, next) => {
+    try {
+        const sellerId = req.params.id;
+        const seller = await sellerModel.findById(sellerId);
+
+        if (!seller) {
+            return res.status(404).json({ message: 'Seller not found' });
+        }
+
+        const [bookResult, orderResult] = await Promise.all([
+            bookModel.deleteMany({ sellerId }),
+            orderModel.deleteMany({ sellerId, status: { $in: ['placed', 'shipped'] } })
+        ]);
+
+        await sellerModel.findByIdAndDelete(sellerId);
+
+        return res.status(200).json({
+            message: 'Seller deleted',
+            sellerId: seller._id,
+            deletedBooks: bookResult.deletedCount ?? 0,
+            deletedOrders: orderResult.deletedCount ?? 0
+        });
+    } catch (err) {
+        return res.status(500).json({ message: 'Server error', error: err.message });
     }
 }
