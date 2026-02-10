@@ -16,6 +16,7 @@ import UserOrders from './Pages/User/UserOrders';
 import SellerHomePage from './Pages/Seller/SellerHomePage';
 import SellBooks from './Pages/Seller/SellBooks';
 import SellerOrders from './Pages/Seller/SellerOrders';
+import SellerBookReviews from './Pages/Seller/SellerBookReviews';
 import AdminHomePage from './Pages/Admin/AdminHomePage';
 import AdminControl from './Pages/Admin/AdminControl';
 import AdminOrders from './Pages/Admin/AdminOrders';
@@ -54,6 +55,7 @@ const App = () => {
           <Route path="/seller/home" element={<SellerHomePage />} />
           <Route path="/seller/sell" element={<SellBooks />} />
           <Route path="/seller/orders" element={<SellerOrders />} />
+          <Route path="/seller/reviews" element={<SellerBookReviews />} />
         </Route>
 
         {/* Admin Routes */}

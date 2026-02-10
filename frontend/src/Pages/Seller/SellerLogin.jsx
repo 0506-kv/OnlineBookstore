@@ -24,7 +24,11 @@ const SellerLogin = () => {
                 localStorage.setItem('token', token);
 
                 if (role === 'admin') {
+                    localStorage.removeItem('seller');
+                    localStorage.removeItem('user');
                     localStorage.setItem('role', 'admin');
+                    localStorage.setItem('admin', JSON.stringify({ email: form.email }));
+                    document.cookie = 'token=; Max-Age=0; path=/';
                     toast.success('Welcome back, Admin!');
                     navigate('/admin/control');
                 } else {

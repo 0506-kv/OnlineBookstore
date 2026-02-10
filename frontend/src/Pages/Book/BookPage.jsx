@@ -40,27 +40,6 @@ const FALLBACK_BOOK = {
     createdAt: '2024-08-12T00:00:00.000Z'
 };
 
-const REVIEW_CARDS = [
-    {
-        name: 'Meera Patel',
-        role: 'Sci-fi collector',
-        text: 'The typography, the illustrations, the pacing — it feels like opening a portal. Worth every rupee.',
-        score: 5
-    },
-    {
-        name: 'Dev Anand',
-        role: 'Book blogger',
-        text: 'A rare edition that balances poetic writing with world-building. The packaging was immaculate.',
-        score: 4
-    },
-    {
-        name: 'Sana Idris',
-        role: 'Design lead',
-        text: 'This is the most cinematic book page I have ever owned. Gorgeous from cover to colophon.',
-        score: 5
-    }
-];
-
 const BookPage = () => {
     const { id } = useParams();
     const location = useLocation();
@@ -74,6 +53,24 @@ const BookPage = () => {
     const [coverUrl, setCoverUrl] = useState('');
     const [coverLoaded, setCoverLoaded] = useState(false);
     const [coverSource, setCoverSource] = useState('');
+    const [reviews, setReviews] = useState([]);
+    const [reviewsLoading, setReviewsLoading] = useState(false);
+    const [reviewsError, setReviewsError] = useState('');
+    const [reviewDraft, setReviewDraft] = useState({ rating: 5, comment: '' });
+    const [reviewDraftId, setReviewDraftId] = useState(null);
+    const [reviewSubmitting, setReviewSubmitting] = useState(false);
+    const [reviewNotice, setReviewNotice] = useState('');
+    const [reviewActionError, setReviewActionError] = useState('');
+    const [hoverRating, setHoverRating] = useState(null);
+
+    const currentUser = useMemo(() => {
+        try {
+            return JSON.parse(localStorage.getItem('user') || 'null');
+        } catch (err) {
+            return null;
+        }
+    }, []);
+    const currentUserId = currentUser?._id;
 
     useEffect(() => {
         if (initialBook) {
@@ -112,6 +109,49 @@ const BookPage = () => {
     }, [id, initialBook]);
 
     const displayBook = book || FALLBACK_BOOK;
+    const reviewBookId = displayBook?._id;
+
+    useEffect(() => {
+        if (!reviewBookId) {
+            setReviews([]);
+            setReviewsError('');
+            setReviewsLoading(false);
+            return;
+        }
+
+        let active = true;
+        const fetchReviews = async () => {
+            setReviewNotice('');
+            setReviewActionError('');
+            setHoverRating(null);
+            setReviewsLoading(true);
+            setReviewsError('');
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/reviews/book/${reviewBookId}`);
+                if (!active) return;
+                setReviews(response.data.reviews || []);
+            } catch (err) {
+                console.error('Error fetching reviews:', err);
+                if (active) {
+                    setReviewsError('We could not load reviews right now.');
+                }
+            } finally {
+                if (active) {
+                    setReviewsLoading(false);
+                }
+            }
+        };
+
+        fetchReviews();
+        return () => {
+            active = false;
+        };
+    }, [reviewBookId]);
+
+    useEffect(() => {
+        setReviewDraft({ rating: 5, comment: '' });
+        setReviewDraftId(null);
+    }, [reviewBookId]);
     const coverTitle = displayBook?.name?.trim() || '';
     const coverAuthor = displayBook?.author?.trim() || '';
     const coverIsbn = String(displayBook?.isbn || '').replace(/[^0-9X]/gi, '');
@@ -192,10 +232,62 @@ const BookPage = () => {
         setCoverLoaded(false);
     }, [coverUrl]);
 
+    const myReview = useMemo(() => {
+        if (!currentUserId) return null;
+        return (
+            reviews.find((review) => {
+                const reviewUserId = review.userId?._id || review.userId;
+                return reviewUserId === currentUserId;
+            }) || null
+        );
+    }, [currentUserId, reviews]);
+
+    useEffect(() => {
+        if (myReview?._id && reviewDraftId !== myReview._id) {
+            setReviewDraft({
+                rating: myReview.rating || 5,
+                comment: myReview.comment || ''
+            });
+            setReviewDraftId(myReview._id);
+            return;
+        }
+
+        if (!myReview && reviewDraftId) {
+            setReviewDraft({ rating: 5, comment: '' });
+            setReviewDraftId(null);
+        }
+    }, [myReview, reviewDraftId]);
+
     const priceValue = Number(displayBook.price);
     const formattedPrice = Number.isFinite(priceValue)
         ? priceValue.toLocaleString('en-IN')
         : displayBook.price || '—';
+
+    const reviewSummary = useMemo(() => {
+        if (reviews.length > 0) {
+            const total = reviews.reduce((sum, review) => sum + Number(review.rating || 0), 0);
+            const average = total / reviews.length;
+            return {
+                count: reviews.length,
+                average: Number.isFinite(average) ? Number(average.toFixed(1)) : 0,
+                fallback: false
+            };
+        }
+        const fallbackCount = Number(displayBook.ratingCount || 0);
+        const fallbackRating = Number(displayBook.rating || 0);
+        return {
+            count: fallbackCount,
+            average: Number.isFinite(fallbackRating) ? fallbackRating : 0,
+            fallback: true
+        };
+    }, [displayBook.rating, displayBook.ratingCount, reviews]);
+
+    const ratingDisplay = reviewSummary.average
+        ? reviewSummary.average.toFixed(1)
+        : '—';
+    const reviewCountLabel = reviewSummary.count
+        ? `${reviewSummary.count}${reviewSummary.fallback ? '+' : ''} review${reviewSummary.count === 1 ? '' : 's'}`
+        : 'No reviews yet';
 
     const handleAddToCart = async () => {
         if (!displayBook?._id) return;
@@ -214,6 +306,100 @@ const BookPage = () => {
             navigate('/user/cart');
         } catch (err) {
             console.error('Error adding to cart:', err);
+        }
+    };
+
+    const handleReviewSubmit = async (event) => {
+        event.preventDefault();
+        if (!reviewBookId) return;
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/user/login');
+            return;
+        }
+
+        const ratingValue = Number(reviewDraft.rating || 0);
+        const comment = reviewDraft.comment.trim();
+
+        if (!comment) {
+            setReviewActionError('Please add a short comment with your rating.');
+            return;
+        }
+
+        setReviewSubmitting(true);
+        setReviewNotice('');
+        setReviewActionError('');
+
+        try {
+            if (myReview?._id) {
+                const response = await axios.patch(
+                    `${import.meta.env.VITE_BASE_URL}/reviews/${myReview._id}`,
+                    { rating: ratingValue, comment },
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                const updated = response.data.review;
+                setReviews((prev) =>
+                    prev.map((review) =>
+                        review._id === updated._id ? { ...review, ...updated } : review
+                    )
+                );
+                setReviewNotice('Review updated successfully.');
+            } else {
+                const response = await axios.post(
+                    `${import.meta.env.VITE_BASE_URL}/reviews/add`,
+                    { bookId: reviewBookId, rating: ratingValue, comment },
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                const created = response.data.review;
+                const hydratedReview = {
+                    ...created,
+                    userId: created.userId && typeof created.userId === 'object'
+                        ? created.userId
+                        : currentUser
+                            ? { _id: currentUserId, fullname: currentUser.fullname }
+                            : created.userId
+                };
+                setReviews((prev) => [hydratedReview, ...prev]);
+                setReviewNotice('Review added successfully.');
+            }
+        } catch (err) {
+            console.error('Error submitting review:', err);
+            setReviewActionError(
+                err.response?.data?.message || 'We could not submit your review right now.'
+            );
+        } finally {
+            setReviewSubmitting(false);
+        }
+    };
+
+    const handleReviewDelete = async (reviewId) => {
+        if (!reviewId) return;
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const confirmed = window.confirm('Delete your review for this book?');
+        if (!confirmed) return;
+
+        setReviewSubmitting(true);
+        setReviewNotice('');
+        setReviewActionError('');
+
+        try {
+            await axios.delete(`${import.meta.env.VITE_BASE_URL}/reviews/${reviewId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setReviews((prev) => prev.filter((review) => review._id !== reviewId));
+            setReviewDraft({ rating: 5, comment: '' });
+            setReviewDraftId(null);
+            setReviewNotice('Review deleted.');
+        } catch (err) {
+            console.error('Error deleting review:', err);
+            setReviewActionError(
+                err.response?.data?.message || 'We could not delete your review right now.'
+            );
+        } finally {
+            setReviewSubmitting(false);
         }
     };
 
@@ -281,6 +467,24 @@ const BookPage = () => {
         { label: 'Illustrated', tone: 'from-[#38bdf8] to-[#0ea5e9]' },
         { label: 'First Print', tone: 'from-[#f97316] to-[#fb923c]' }
     ];
+
+    const canSubmitReview = reviewBookId
+        && reviewDraft.comment.trim().length > 0
+        && Number(reviewDraft.rating || 0) >= 1;
+
+    const renderStars = (value, size = 'h-4 w-4') => {
+        const filledCount = Math.round(Number(value || 0));
+        return Array.from({ length: 5 }).map((_, index) => {
+            const filled = index < filledCount;
+            return (
+                <Star
+                    key={`${value}-${index}`}
+                    className={`${size} ${filled ? 'text-[#f97316]' : 'text-[#e4d8c9]'}`}
+                    fill={filled ? 'currentColor' : 'none'}
+                />
+            );
+        });
+    };
 
     return (
         <div className="min-h-screen bg-[#f7f2ea] font-['Space_Grotesk',sans-serif] text-[#1f2933]">
@@ -406,10 +610,10 @@ const BookPage = () => {
                                                 <Star className="h-5 w-5 text-[#f97316]" />
                                                 <div>
                                                     <div className="text-lg font-semibold text-[#1f2933]">
-                                                        {displayBook.rating || 4.8}
+                                                        {ratingDisplay}
                                                     </div>
                                                     <div className="text-xs text-[#8b7d6b]">
-                                                        {displayBook.ratingCount || 1600}+ reviews
+                                                        {reviewCountLabel}
                                                     </div>
                                                 </div>
                                             </div>
@@ -676,6 +880,17 @@ const BookPage = () => {
                                             <p className="mt-2 text-sm text-[#5c4f44]">
                                                 Real reactions from readers who unlocked this story.
                                             </p>
+                                            <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-[#6b5e4d]">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="flex items-center gap-1 text-[#f97316]">
+                                                        {renderStars(reviewSummary.average, 'h-4 w-4')}
+                                                    </div>
+                                                    <span className="font-semibold text-[#1f2933]">{ratingDisplay}</span>
+                                                </div>
+                                                <span className="text-xs uppercase tracking-[0.28em] text-[#8b7d6b]">
+                                                    {reviewCountLabel}
+                                                </span>
+                                            </div>
                                         </div>
                                         <Link
                                             to="/user/buy"
@@ -684,28 +899,174 @@ const BookPage = () => {
                                             View more
                                         </Link>
                                     </div>
-                                    <div className="mt-6 grid gap-4 lg:grid-cols-3">
-                                        {REVIEW_CARDS.map((review) => (
-                                            <div
-                                                key={review.name}
-                                                className="flex h-full flex-col justify-between rounded-2xl border border-[#e7dccd] bg-white p-5 shadow-sm"
-                                            >
-                                                <div>
-                                                    <div className="flex items-center gap-1 text-[#f97316]">
-                                                        {Array.from({ length: review.score }).map((_, index) => (
-                                                            <Star key={`${review.name}-${index}`} className="h-4 w-4" />
-                                                        ))}
-                                                    </div>
-                                                    <p className="mt-3 text-sm text-[#5c4f44]">{review.text}</p>
+                                    <div className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+                                        <div className="space-y-4">
+                                            {reviewsLoading ? (
+                                                <div className="rounded-2xl border border-[#e7dccd] bg-white p-5 text-sm text-[#6b5e4d]">
+                                                    Loading reviews...
                                                 </div>
-                                                <div className="mt-6">
-                                                    <div className="text-sm font-semibold text-[#1f2933]">{review.name}</div>
-                                                    <div className="text-xs uppercase tracking-[0.28em] text-[#8b7d6b]">
-                                                        {review.role}
-                                                    </div>
+                                            ) : reviewsError ? (
+                                                <div className="rounded-2xl border border-[#f2c3b4] bg-[#fff4f0] p-5 text-sm text-[#b34a2f]">
+                                                    {reviewsError}
                                                 </div>
-                                            </div>
-                                        ))}
+                                            ) : reviews.length === 0 ? (
+                                                <div className="rounded-2xl border border-[#e7dccd] bg-white p-5 text-sm text-[#6b5e4d]">
+                                                    No reviews yet. Be the first to share your thoughts.
+                                                </div>
+                                            ) : (
+                                                reviews.map((review) => {
+                                                    const reviewUserId = review.userId?._id || review.userId;
+                                                    const isOwner = currentUserId && reviewUserId === currentUserId;
+                                                    const reviewerName = review.userId?.fullname
+                                                        || (isOwner ? currentUser?.fullname : 'Reader');
+                                                    const reviewDate = review.createdAt
+                                                        ? new Date(review.createdAt).toLocaleDateString()
+                                                        : 'Date not available';
+
+                                                    return (
+                                                        <div
+                                                            key={review._id}
+                                                            className="flex h-full flex-col justify-between rounded-2xl border border-[#e7dccd] bg-white p-5 shadow-sm"
+                                                        >
+                                                            <div>
+                                                                <div className="flex items-center gap-1 text-[#f97316]">
+                                                                    {renderStars(review.rating, 'h-4 w-4')}
+                                                                </div>
+                                                                <p className="mt-3 text-sm text-[#5c4f44]">
+                                                                    {review.comment}
+                                                                </p>
+                                                            </div>
+                                                            <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+                                                                <div>
+                                                                    <div className="text-sm font-semibold text-[#1f2933]">
+                                                                        {reviewerName}
+                                                                    </div>
+                                                                    <div className="text-xs uppercase tracking-[0.28em] text-[#8b7d6b]">
+                                                                        {reviewDate}
+                                                                    </div>
+                                                                </div>
+                                                                {isOwner && (
+                                                                    <span className="rounded-full bg-[#0f766e]/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#0f766e]">
+                                                                        Your review
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })
+                                            )}
+                                        </div>
+
+                                        <div className="rounded-2xl border border-[#e7dccd] bg-white p-5 shadow-sm">
+                                            <h3 className="text-lg font-semibold text-[#1f2933] font-['Playfair_Display',serif]">
+                                                {myReview ? 'Update your review' : 'Share your review'}
+                                            </h3>
+                                            <p className="mt-2 text-sm text-[#5c4f44]">
+                                                Your feedback helps other readers discover their next favorite story.
+                                            </p>
+
+                                            {reviewNotice && (
+                                                <div className="mt-4 rounded-2xl border border-[#c7ede1] bg-[#f3fffb] px-4 py-3 text-sm text-[#0f766e]">
+                                                    {reviewNotice}
+                                                </div>
+                                            )}
+                                            {reviewActionError && (
+                                                <div className="mt-4 rounded-2xl border border-[#f2c3b4] bg-[#fff4f0] px-4 py-3 text-sm text-[#b34a2f]">
+                                                    {reviewActionError}
+                                                </div>
+                                            )}
+
+                                            {reviewBookId ? (
+                                                <form onSubmit={handleReviewSubmit} className="mt-4 space-y-4">
+                                                    <div>
+                                                        <div className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7d6b]">
+                                                            Your rating
+                                                        </div>
+                                                        <div className="mt-2 flex items-center gap-2">
+                                                            {[1, 2, 3, 4, 5].map((value) => {
+                                                                const activeRating = hoverRating ?? reviewDraft.rating;
+                                                                const filled = value <= activeRating;
+                                                                return (
+                                                                    <button
+                                                                        key={value}
+                                                                        type="button"
+                                                                        onMouseEnter={() => setHoverRating(value)}
+                                                                        onMouseLeave={() => setHoverRating(null)}
+                                                                        onClick={() => {
+                                                                            setReviewDraft((prev) => ({
+                                                                                ...prev,
+                                                                                rating: value
+                                                                            }));
+                                                                            setReviewNotice('');
+                                                                            setReviewActionError('');
+                                                                        }}
+                                                                        className="rounded-full p-1 transition hover:-translate-y-0.5"
+                                                                        aria-label={`Rate ${value} star${value === 1 ? '' : 's'}`}
+                                                                    >
+                                                                        <Star
+                                                                            className={`h-5 w-5 ${filled ? 'text-[#f97316]' : 'text-[#e4d8c9]'}`}
+                                                                            fill={filled ? 'currentColor' : 'none'}
+                                                                        />
+                                                                    </button>
+                                                                );
+                                                            })}
+                                                            <span className="text-xs uppercase tracking-[0.28em] text-[#8b7d6b]">
+                                                                {reviewDraft.rating} / 5
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <label className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7d6b]">
+                                                            Comment
+                                                        </label>
+                                                        <textarea
+                                                            value={reviewDraft.comment}
+                                                            onChange={(event) => {
+                                                                const value = event.target.value;
+                                                                setReviewDraft((prev) => ({
+                                                                    ...prev,
+                                                                    comment: value
+                                                                }));
+                                                                setReviewNotice('');
+                                                                setReviewActionError('');
+                                                            }}
+                                                            rows={4}
+                                                            className="mt-2 w-full rounded-2xl border border-[#e7dccd] bg-white px-4 py-3 text-sm text-[#1f2933] shadow-sm focus:border-[#0f766e] focus:outline-none"
+                                                            placeholder="What stood out to you?"
+                                                        />
+                                                    </div>
+
+                                                    <div className="flex flex-wrap gap-3">
+                                                        <button
+                                                            type="submit"
+                                                            disabled={reviewSubmitting || !canSubmitReview}
+                                                            className="inline-flex items-center gap-2 rounded-full bg-[#0f766e] px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-teal-200/70 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
+                                                        >
+                                                            {reviewSubmitting
+                                                                ? 'Saving...'
+                                                                : myReview
+                                                                    ? 'Update review'
+                                                                    : 'Submit review'}
+                                                        </button>
+                                                        {myReview && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleReviewDelete(myReview._id)}
+                                                                disabled={reviewSubmitting}
+                                                                className="inline-flex items-center gap-2 rounded-full border border-[#f2c3b4] bg-white px-5 py-2 text-sm font-semibold text-[#b34a2f] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
+                                                            >
+                                                                Delete review
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </form>
+                                            ) : (
+                                                <div className="mt-4 rounded-2xl border border-[#e7dccd] bg-white px-4 py-3 text-sm text-[#6b5e4d]">
+                                                    Reviews are available for catalog titles only.
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </section>
                             </motion.div>

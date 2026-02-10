@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, Package, Settings, LogOut, Store } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Package, Star, LogOut, Store } from 'lucide-react';
 
 const SellerHeader = () => {
     const navigate = useNavigate();
@@ -26,6 +26,7 @@ const SellerHeader = () => {
         { label: 'Home', path: '/seller/home', icon: LayoutDashboard },
         { label: 'My Books', path: '/seller/sell', icon: BookOpen },
         { label: 'Orders', path: '/seller/orders', icon: Package },
+        { label: 'Reviews', path: '/seller/reviews', icon: Star },
     ];
 
     return (
