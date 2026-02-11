@@ -5,23 +5,6 @@ import { ArrowRight, BadgeCheck, BookOpen, ShieldCheck, Sparkles, UserCircle } f
 import UserHeader from '../../Components/User/UserHeader';
 import UserFooter from '../../Components/User/UserFooter';
 
-const highlights = [
-    {
-        title: 'All sellers, one shelf',
-        description: 'Compare listings across every seller in one curated catalog.',
-        icon: BookOpen
-    },
-    {
-        title: 'Transparent listings',
-        description: 'See seller details, pricing, and metadata at a glance.',
-        icon: Sparkles
-    },
-    {
-        title: 'Secure access',
-        description: 'Your account stays protected with every session.',
-        icon: ShieldCheck
-    }
-];
 
 const UserHomePage = () => {
     const navigate = useNavigate();
@@ -43,7 +26,7 @@ const UserHomePage = () => {
     const firstName = user.fullname?.split(' ')[0] || 'Reader';
 
     return (
-        <div className="user-shell min-h-screen flex flex-col">
+        <div className="user-shell font-serif min-h-screen flex flex-col">
             <UserHeader user={user} />
 
             <main className="flex-1">
@@ -79,23 +62,12 @@ const UserHomePage = () => {
                                         Browse all books
                                         <ArrowRight className="h-4 w-4" />
                                     </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => document.getElementById('profile')?.scrollIntoView({ behavior: 'smooth' })}
-                                        className="inline-flex items-center gap-2 rounded-full border border-[#eadfd0] bg-white/70 px-5 py-2.5 text-sm font-semibold text-[#5c4f44] transition-all hover:-translate-y-0.5"
-                                    >
-                                        View profile
-                                    </button>
                                 </div>
 
                                 <div className="mt-6 flex flex-wrap gap-3 text-sm text-[#6b5b4a]">
                                     <div className="flex items-center gap-2 rounded-full border border-white/80 bg-white/70 px-3 py-2">
                                         <BadgeCheck className="h-4 w-4 text-[#0f766e]" />
                                         Verified account
-                                    </div>
-                                    <div className="flex items-center gap-2 rounded-full border border-white/80 bg-white/70 px-3 py-2">
-                                        <BookOpen className="h-4 w-4 text-[#0f766e]" />
-                                        Access every seller
                                     </div>
                                 </div>
                             </div>
@@ -142,39 +114,6 @@ const UserHomePage = () => {
                             </div>
                         </div>
                     </motion.section>
-
-                    <motion.div
-                        initial="hidden"
-                        animate="show"
-                        variants={{
-                            hidden: { opacity: 0, y: 16 },
-                            show: {
-                                opacity: 1,
-                                y: 0,
-                                transition: { staggerChildren: 0.08, delayChildren: 0.2 }
-                            }
-                        }}
-                        className="mt-10 grid gap-6 md:grid-cols-3"
-                    >
-                        {highlights.map(({ title, description, icon: Icon }) => (
-                            <motion.div
-                                key={title}
-                                variants={{
-                                    hidden: { opacity: 0, y: 16 },
-                                    show: { opacity: 1, y: 0 }
-                                }}
-                                whileHover={{ y: -6 }}
-                                transition={{ duration: 0.3 }}
-                                className="rounded-3xl border border-[#eadfd0] bg-white p-6 shadow-sm"
-                            >
-                                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0f766e]/10 text-[#0f766e]">
-                                    <Icon className="h-6 w-6" />
-                                </div>
-                                <h3 className="mt-4 text-lg font-semibold text-[#1f2933]">{title}</h3>
-                                <p className="mt-2 text-sm text-[#5c4f44]">{description}</p>
-                            </motion.div>
-                        ))}
-                    </motion.div>
                 </div>
             </main>
 

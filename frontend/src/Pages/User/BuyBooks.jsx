@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BookOpen, Calendar, Filter, IndianRupee, Mail, Search, Sparkles, User } from 'lucide-react';
+import { Filter, Search } from 'lucide-react';
+import BookListItem from '../../Components/User/BookListItem';
 import UserHeader from '../../Components/User/UserHeader';
 import UserFooter from '../../Components/User/UserFooter';
 
@@ -67,200 +68,144 @@ const BuyBooks = () => {
         });
     }, [books, activeCategory, query]);
 
-    const formatDate = (value) => {
-        if (!value) return 'Date not set';
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) return 'Date not set';
-        return date.toLocaleDateString();
+    const handleAddToCart = async (book) => {
+        if (!book?._id) return;
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/user/login');
+            return;
+        }
+
+        try {
+            await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/cart/add`,
+                { bookId: book._id, quantity: 1 },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            navigate('/user/cart');
+        } catch (err) {
+            console.error('Error adding to cart:', err);
+            alert('Failed to add to cart. Please try again.');
+        }
     };
 
     if (!user) return null;
 
     return (
-        <div className="user-shell min-h-screen flex flex-col">
+        <div className="user-shell min-h-screen flex flex-col bg-[#f0f4f8]">
             <UserHeader user={user} />
 
             <main className="flex-1">
-                <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
-                    <motion.section
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, ease: 'easeOut' }}
-                        className="relative overflow-hidden rounded-[28px] border border-[#eadfd0] bg-white p-8 shadow-sm md:p-12"
-                    >
-                        <div className="absolute -right-24 -top-24 h-56 w-56 rounded-full bg-[#0ea5a4]/15 blur-3xl" />
-                        <div className="absolute -left-20 bottom-0 h-56 w-56 rounded-full bg-[#f97316]/15 blur-3xl" />
-
-                        <div className="relative z-10">
-                            <div className="inline-flex items-center gap-2 rounded-full border border-[#eadfd0] bg-[#f9f5ef] px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#8b7d6b]">
-                                <Sparkles className="h-4 w-4" />
-                                Marketplace
+                <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+                    {/* Hero / filter section */}
+                    <div className="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+                        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                            <div>
+                                <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+                                    Browse Books
+                                </h1>
+                                <p className="mt-1 text-sm text-gray-500">
+                                    Discover your next great read from our community sellers.
+                                </p>
                             </div>
-                            <h1 className="user-heading mt-4 text-3xl font-semibold text-[#1f2933] md:text-4xl">
-                                Browse all books
-                            </h1>
-                            <p className="mt-3 text-base text-[#5c4f44]">
-                                Every listing from every seller, thoughtfully organized for you.
-                            </p>
 
-                            <div className="mt-6 flex flex-col gap-4 lg:flex-row lg:items-center">
-                                <div className="relative flex-1">
-                                    <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8b7d6b]" />
+                            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                                <div className="relative group">
+                                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <Search className="h-5 w-5 text-gray-400 group-focus-within:text-[#0f766e]" />
+                                    </div>
                                     <input
                                         type="text"
                                         value={query}
-                                        onChange={(event) => setQuery(event.target.value)}
-                                        placeholder="Search by title, author, or seller..."
-                                        className="w-full rounded-full border border-[#eadfd0] bg-white py-3 pl-11 pr-4 text-sm text-[#1f2933] outline-none transition focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/15"
+                                        onChange={(e) => setQuery(e.target.value)}
+                                        className="block w-full rounded-full border-0 bg-gray-100 py-3 pl-10 pr-4 text-gray-900 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-[#0f766e] sm:w-64 sm:text-sm sm:leading-6 transition-all"
+                                        placeholder="Search title, author..."
                                     />
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#eadfd0] bg-[#f9f5ef] text-[#8b7d6b]">
-                                        <Filter className="h-4 w-4" />
-                                    </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {categories.map((category) => (
-                                            <button
-                                                key={category}
-                                                type="button"
-                                                onClick={() => setActiveCategory(category)}
-                                                className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition-all ${
-                                                    activeCategory === category
-                                                        ? 'border-[#0f766e] bg-[#0f766e] text-white shadow-sm'
-                                                        : 'border-[#eadfd0] bg-white text-[#8b7d6b] hover:border-[#0f766e] hover:text-[#0f766e]'
-                                                }`}
-                                            >
-                                                {category}
-                                            </button>
-                                        ))}
-                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </motion.section>
 
-                    <section className="mt-10">
+                        {/* Categories */}
+                        <div className="mt-6 flex flex-wrap gap-2 border-t border-gray-100 pt-6">
+                            <span className="flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+                                <Filter className="h-3 w-3" /> Filters:
+                            </span>
+                            {categories.map((category) => (
+                                <button
+                                    key={category}
+                                    onClick={() => setActiveCategory(category)}
+                                    className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${activeCategory === category
+                                        ? 'bg-[#0f766e] text-white'
+                                        : 'bg-white text-gray-600 ring-1 ring-inset ring-gray-200 hover:bg-gray-50'
+                                        }`}
+                                >
+                                    {category}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Content */}
+                    <section>
                         {loading ? (
-                            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                                {Array.from({ length: 6 }).map((_, index) => (
+                            <div className="flex flex-col gap-4">
+                                {Array.from({ length: 4 }).map((_, index) => (
                                     <div
                                         key={`skeleton-${index}`}
-                                        className="animate-pulse rounded-3xl border border-[#eadfd0] bg-white p-6"
+                                        className="flex animate-pulse flex-col gap-4 rounded-2xl bg-white p-4 shadow-sm sm:flex-row"
                                     >
-                                        <div className="h-12 w-12 rounded-2xl bg-[#f1e7dd]" />
-                                        <div className="mt-4 h-4 w-2/3 rounded bg-[#f1e7dd]" />
-                                        <div className="mt-2 h-3 w-1/2 rounded bg-[#f1e7dd]" />
-                                        <div className="mt-6 h-20 rounded bg-[#f1e7dd]" />
+                                        <div className="h-48 w-full shrink-0 rounded-lg bg-gray-200 sm:w-32" />
+                                        <div className="flex flex-1 flex-col gap-3">
+                                            <div className="h-6 w-3/4 rounded bg-gray-200" />
+                                            <div className="h-4 w-1/2 rounded bg-gray-200" />
+                                            <div className="mt-auto h-10 w-32 rounded bg-gray-200" />
+                                        </div>
                                     </div>
                                 ))}
                             </div>
                         ) : error ? (
-                            <div className="rounded-3xl border border-[#f2c3b4] bg-[#fff4f0] p-6 text-[#b34a2f]">
-                                <h2 className="text-lg font-semibold">Unable to load books</h2>
-                                <p className="mt-2 text-sm">{error}</p>
+                            <div className="rounded-2xl border border-red-100 bg-red-50 p-8 text-center">
+                                <h3 className="text-lg font-semibold text-red-800">Unable to load books</h3>
+                                <p className="mt-2 text-sm text-red-600">{error}</p>
                                 <button
-                                    type="button"
                                     onClick={fetchBooks}
-                                    className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#f2c3b4] bg-white px-4 py-2 text-sm font-semibold text-[#b34a2f] transition hover:-translate-y-0.5"
+                                    className="mt-4 rounded-full bg-white px-4 py-2 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-inset ring-red-200 hover:bg-red-50"
                                 >
-                                    Try again
+                                    Retry
                                 </button>
                             </div>
                         ) : filteredBooks.length === 0 ? (
-                            <div className="rounded-3xl border border-[#eadfd0] bg-white p-6 text-[#5c4f44]">
-                                <h2 className="text-lg font-semibold">No matching books</h2>
-                                <p className="mt-2 text-sm">
-                                    Try a different search or switch categories to see more listings.
+                            <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-12 text-center shadow-sm">
+                                <div className="rounded-full bg-gray-100 p-4">
+                                    <Search className="h-8 w-8 text-gray-400" />
+                                </div>
+                                <h3 className="mt-4 text-lg font-semibold text-gray-900">No books found</h3>
+                                <p className="mt-2 text-sm text-gray-500">
+                                    We couldn't find any books matching your search or filters.
                                 </p>
+                                <button
+                                    onClick={() => {
+                                        setQuery('');
+                                        setActiveCategory('All');
+                                    }}
+                                    className="mt-6 text-sm font-semibold text-[#0f766e] hover:text-[#0d5f5a]"
+                                >
+                                    Clear all filters
+                                </button>
                             </div>
                         ) : (
                             <motion.div
                                 layout
-                                variants={{
-                                    hidden: { opacity: 0 },
-                                    show: { opacity: 1, transition: { staggerChildren: 0.06 } }
-                                }}
-                                initial="hidden"
-                                animate="show"
-                                className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+                                className="flex flex-col gap-4"
                             >
                                 <AnimatePresence mode="popLayout">
-                                    {filteredBooks.map((book) => {
-                                        const category = book.category?.trim()
-                                            ? book.category.trim()
-                                            : 'Uncategorized';
-                                        const openBook = () => {
-                                            if (!book?._id) return;
-                                            navigate(`/user/book/${book._id}`, { state: { book } });
-                                        };
-                                        return (
-                                            <motion.article
-                                                key={book._id}
-                                                layout
-                                                variants={{
-                                                    hidden: { opacity: 0, y: 18 },
-                                                    show: { opacity: 1, y: 0 }
-                                                }}
-                                                exit={{ opacity: 0, y: 12 }}
-                                                whileHover={{ y: -6 }}
-                                                transition={{ duration: 0.3 }}
-                                                onClick={openBook}
-                                                onKeyDown={(event) => {
-                                                    if (event.key === 'Enter' || event.key === ' ') {
-                                                        event.preventDefault();
-                                                        openBook();
-                                                    }
-                                                }}
-                                                role="button"
-                                                tabIndex={0}
-                                                className="group relative flex flex-col rounded-3xl border border-[#eadfd0] bg-white p-6 shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f766e]/40 cursor-pointer"
-                                            >
-                                                <div className="flex items-start justify-between">
-                                                    <div className="grid h-12 w-12 place-items-center rounded-2xl bg-linear-to-br from-[#0f766e] to-[#0ea5a4] text-white text-lg font-semibold shadow-lg shadow-teal-200/60">
-                                                        {book.name?.charAt(0)?.toUpperCase() || 'B'}
-                                                    </div>
-                                                    <span className="rounded-full border border-[#eadfd0] bg-[#f9f5ef] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8b7d6b]">
-                                                        {category}
-                                                    </span>
-                                                </div>
-
-                                                <h3 className="mt-4 text-lg font-semibold text-[#1f2933]">{book.name}</h3>
-                                                <p className="mt-1 flex items-center gap-2 text-sm text-[#6b5b4a]">
-                                                    <User className="h-4 w-4" />
-                                                    {book.author}
-                                                </p>
-                                                <p className="mt-3 text-sm text-[#5c4f44] line-clamp-3">
-                                                    {book.description || 'No description provided.'}
-                                                </p>
-
-                                                <div className="mt-4 flex items-center justify-between border-t border-[#f1e7dd] pt-4 text-sm">
-                                                    <div className="flex items-center gap-1 text-lg font-semibold text-[#0f766e]">
-                                                        <IndianRupee className="h-4 w-4" />
-                                                        {book.price}
-                                                    </div>
-                                                    <div className="flex items-center gap-1 text-xs text-[#8b7d6b]">
-                                                        <Calendar className="h-3.5 w-3.5" />
-                                                        {formatDate(book.dateOfPublishing)}
-                                                    </div>
-                                                </div>
-
-                                                <div className="mt-4 rounded-2xl border border-[#eadfd0] bg-[#f9f5ef] p-4">
-                                                    <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#8b7d6b]">
-                                                        <BookOpen className="h-4 w-4" />
-                                                        Seller
-                                                    </div>
-                                                    <div className="mt-2 text-sm font-semibold text-[#1f2933]">
-                                                        {book.sellerId?.storename || 'Independent seller'}
-                                                    </div>
-                                                    <div className="mt-1 flex items-center gap-2 text-xs text-[#8b7d6b]">
-                                                        <Mail className="h-3.5 w-3.5" />
-                                                        {book.sellerId?.email || 'Contact info not available'}
-                                                    </div>
-                                                </div>
-                                            </motion.article>
-                                        );
-                                    })}
+                                    {filteredBooks.map((book) => (
+                                        <BookListItem
+                                            key={book._id}
+                                            book={book}
+                                            onAddToCart={handleAddToCart}
+                                        />
+                                    ))}
                                 </AnimatePresence>
                             </motion.div>
                         )}
