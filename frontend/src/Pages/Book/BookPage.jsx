@@ -431,27 +431,6 @@ const BookPage = () => {
         return [];
     }, [displayBook.tags]);
 
-    const highlights = useMemo(
-        () => [
-            {
-                title: 'Vaulted Edition',
-                description: 'Printed on archival paper with gold-foil maps and stitched binding.',
-                icon: Sparkles
-            },
-            {
-                title: 'Verified Authenticity',
-                description: 'Every copy is QR-verified and shipped in climate-sealed packaging.',
-                icon: ShieldCheck
-            },
-            {
-                title: 'Hyperfast Dispatch',
-                description: 'Ships within 24 hours from our cosmic fulfillment pods.',
-                icon: Truck
-            }
-        ],
-        []
-    );
-
     const metadata = useMemo(
         () => [
             { label: 'Publisher', value: displayBook.publisher || 'Aurora Press', icon: BookOpen },
@@ -461,12 +440,6 @@ const BookPage = () => {
         ],
         [displayBook.language, displayBook.pages, displayBook.publisher, displayBook.year]
     );
-
-    const floatingChips = [
-        { label: 'Signed', tone: 'from-[#0f766e] to-[#14b8a6]' },
-        { label: 'Illustrated', tone: 'from-[#38bdf8] to-[#0ea5e9]' },
-        { label: 'First Print', tone: 'from-[#f97316] to-[#fb923c]' }
-    ];
 
     const canSubmitReview = reviewBookId
         && reviewDraft.comment.trim().length > 0
@@ -656,20 +629,6 @@ const BookPage = () => {
                                                 <ShoppingBag className="h-4 w-4" />
                                                 Add to bag
                                             </button>
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center gap-2 rounded-full border border-[#e7dccd] bg-white/80 px-6 py-3 text-sm font-semibold text-[#6b5e4d] transition hover:-translate-y-0.5 hover:border-[#0f766e] hover:text-[#0f766e]"
-                                            >
-                                                <Heart className="h-4 w-4" />
-                                                Save for later
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center gap-2 rounded-full border border-[#e7dccd] bg-white/80 px-6 py-3 text-sm font-semibold text-[#6b5e4d] transition hover:-translate-y-0.5 hover:border-[#0f766e] hover:text-[#0f766e]"
-                                            >
-                                                <Bookmark className="h-4 w-4" />
-                                                Read a sample
-                                            </button>
                                         </div>
                                     </motion.div>
 
@@ -736,47 +695,9 @@ const BookPage = () => {
                                                         )}
                                                     </div>
                                                 </motion.div>
-
-                                                <div className="grid gap-3">
-                                                    {floatingChips.map((chip) => (
-                                                        <motion.div
-                                                            key={chip.label}
-                                                            initial={{ opacity: 0, y: 10 }}
-                                                            animate={{ opacity: 1, y: 0 }}
-                                                            transition={{ duration: 0.6, ease: 'easeOut' }}
-                                                            className={`rounded-2xl bg-linear-to-r ${chip.tone} px-4 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-white shadow-lg`}
-                                                        >
-                                                            {chip.label}
-                                                        </motion.div>
-                                                    ))}
-                                                </div>
                                             </div>
                                         </div>
                                     </motion.div>
-                                </section>
-
-                                <section className="grid gap-6 lg:grid-cols-3">
-                                    {highlights.map((item) => {
-                                        const Icon = item.icon;
-                                        return (
-                                            <motion.div
-                                                key={item.title}
-                                                initial={{ opacity: 0, y: 16 }}
-                                                whileInView={{ opacity: 1, y: 0 }}
-                                                viewport={{ once: true, amount: 0.4 }}
-                                                transition={{ duration: 0.5, ease: 'easeOut' }}
-                                                className="rounded-[26px] border border-[#e7dccd] bg-white/80 p-6 shadow-sm"
-                                            >
-                                                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0f766e]/10 text-[#0f766e]">
-                                                    <Icon className="h-5 w-5" />
-                                                </div>
-                                                <h3 className="mt-4 text-lg font-semibold text-[#1f2933] font-['Playfair_Display',serif]">
-                                                    {item.title}
-                                                </h3>
-                                                <p className="mt-2 text-sm text-[#5c4f44]">{item.description}</p>
-                                            </motion.div>
-                                        );
-                                    })}
                                 </section>
 
                                 <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
@@ -861,9 +782,6 @@ const BookPage = () => {
                                                     <div className="text-sm font-semibold text-[#1f2933]">2-4 days</div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="mt-6 rounded-2xl border border-dashed border-[#e7dccd] bg-[#f9f5ef] p-4 text-xs uppercase tracking-[0.28em] text-[#8b7d6b]">
-                                            Every order includes a nebula dust jacket and collector certificate.
                                         </div>
                                     </div>
                                 </section>

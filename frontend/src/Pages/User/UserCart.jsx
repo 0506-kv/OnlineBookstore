@@ -154,7 +154,7 @@ const UserCart = () => {
                                 </div>
                             ) : items.length === 0 ? (
                                 <div className="rounded-2xl border border-[#eadfd0] bg-white p-6 text-sm text-[#5c4f44]">
-                                    Your cart is empty. Pick a book to get started.
+                                    Your cart is empty. Pick a book to get started. <br/>
                                     <button
                                         type="button"
                                         onClick={() => navigate('/user/buy')}

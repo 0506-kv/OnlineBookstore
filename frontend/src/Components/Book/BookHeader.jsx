@@ -4,9 +4,8 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, BookOpen, Heart, Sparkles } from 'lucide-react';
 
 const navLinks = [
-    { label: 'Catalog', to: '/user/buy' },
-    { label: 'Home', to: '/user/home' },
-    { label: 'Discover', to: '/' }
+    { label: 'Home',to: '/user/home' },
+    { label: 'More Books', to: '/user/buy' },
 ];
 
 const BookHeader = () => {
@@ -58,23 +57,6 @@ const BookHeader = () => {
                         </NavLink>
                     ))}
                 </nav>
-
-                <div className="ml-auto flex items-center gap-2">
-                    <button
-                        type="button"
-                        className="hidden items-center gap-2 rounded-full border border-[#e7dccd] bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#6b5e4d] transition hover:-translate-y-0.5 hover:border-[#0f766e] hover:text-[#0f766e] sm:flex"
-                    >
-                        <Heart className="h-4 w-4" />
-                        Wishlist
-                    </button>
-                    <button
-                        type="button"
-                        className="inline-flex items-center gap-2 rounded-full bg-[#0f766e] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white shadow-lg shadow-teal-200/70 transition hover:-translate-y-0.5"
-                    >
-                        <Sparkles className="h-4 w-4" />
-                        Preview
-                    </button>
-                </div>
             </div>
 
             <div className="px-4 pb-4 sm:px-6 lg:hidden">
