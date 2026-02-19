@@ -26,6 +26,7 @@ const AdminHomePage = () => {
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('role');
+        localStorage.removeItem('admin');
         navigate('/seller/login');
     };
 

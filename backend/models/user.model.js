@@ -14,6 +14,15 @@ const userSchema = new mongoose.Schema({
         unique: true,
         minlength: [5, 'Email must be at least 5 characters long'],
     },
+    gender: {
+        type: String,
+        required: true,
+        enum: ['male', 'female', 'other', 'prefer_not_say'],
+    },
+    dateOfBirth: {
+        type: Date,
+        required: true,
+    },
     password: {
         type: String,
         required: true,

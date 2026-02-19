@@ -15,7 +15,9 @@ router.put('/update/:id', authMiddleware.authSeller, bookController.updateBook);
 
 router.delete('/delete/:id', authMiddleware.authSeller, bookController.deleteBook);
 
-router.get('/my-books', authMiddleware.authSeller, bookController.getSellerBooks);
+router.get('/sell', authMiddleware.authSeller, bookController.getSellerBooks);
+
+router.get('/random', bookController.getRandomBooks);
 
 router.get('/all', bookController.getAllBooks);
 

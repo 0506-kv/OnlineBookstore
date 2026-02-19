@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 const UserRegister = () => {
     const navigate = useNavigate();
     const [loaded, setLoaded] = useState(false);
-    const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
+    const [form, setForm] = useState({ name: '', email: '', gender: '', dob: '', password: '', confirm: '' });
     const [focused, setFocused] = useState(null);
 
     useEffect(() => { setLoaded(true); }, []);
@@ -17,6 +17,8 @@ const UserRegister = () => {
             const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, {
                 fullname: form.name,
                 email: form.email,
+                gender: form.gender,
+                dateOfBirth: form.dob,
                 password: form.password
             });
 
@@ -53,6 +55,35 @@ const UserRegister = () => {
                     <div style={s.field}>
                         <label style={s.label}>Email</label>
                         <input type="email" placeholder="you@example.com" style={{ ...s.input, borderColor: focused === 'e' ? '#8b5cf6' : '#e2e8f0' }} value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} onFocus={() => setFocused('e')} onBlur={() => setFocused(null)} required />
+                    </div>
+                    <div style={s.field}>
+                        <label style={s.label}>Gender</label>
+                        <select
+                            style={{ ...s.input, borderColor: focused === 'g' ? '#8b5cf6' : '#e2e8f0' }}
+                            value={form.gender}
+                            onChange={e => setForm({ ...form, gender: e.target.value })}
+                            onFocus={() => setFocused('g')}
+                            onBlur={() => setFocused(null)}
+                            required
+                        >
+                            <option value="" disabled>Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer_not_say">Prefer not to say</option>
+                        </select>
+                    </div>
+                    <div style={s.field}>
+                        <label style={s.label}>Date of Birth</label>
+                        <input
+                            type="date"
+                            style={{ ...s.input, borderColor: focused === 'd' ? '#8b5cf6' : '#e2e8f0' }}
+                            value={form.dob}
+                            onChange={e => setForm({ ...form, dob: e.target.value })}
+                            onFocus={() => setFocused('d')}
+                            onBlur={() => setFocused(null)}
+                            required
+                        />
                     </div>
                     <div style={s.field}>
                         <label style={s.label}>Password</label>

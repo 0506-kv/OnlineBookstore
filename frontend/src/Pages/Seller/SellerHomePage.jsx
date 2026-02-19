@@ -107,7 +107,7 @@ const SellerHomePage = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <button
-                                onClick={() => navigate('/seller/my-books')}
+                                onClick={() => navigate('/seller/sell')}
                                 className="group p-6 rounded-2xl bg-gradient-to-br from-cyan-50 to-blue-50 border border-cyan-100 hover:border-cyan-300 hover:shadow-lg hover:shadow-cyan-100/50 transition-all duration-300 flex flex-col items-center text-center gap-4"
                             >
                                 <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-cyan-600 shadow-sm group-hover:scale-110 transition-transform duration-300">
@@ -119,6 +119,38 @@ const SellerHomePage = () => {
                                 </div>
                                 <div className="mt-2 text-xs font-bold text-cyan-600 uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all">
                                     Go to Inventory <ArrowUpRight className="w-3.5 h-3.5" />
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() => navigate('/seller/orders')}
+                                className="group p-6 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100 hover:border-amber-300 hover:shadow-lg hover:shadow-amber-100/50 transition-all duration-300 flex flex-col items-center text-center gap-4"
+                            >
+                                <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-amber-600 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                                    <Package className="w-7 h-7" />
+                                </div>
+                                <div>
+                                    <h4 className="text-lg font-bold text-slate-900 mb-1">View Orders</h4>
+                                    <p className="text-sm text-slate-500">Track and manage incoming customer orders.</p>
+                                </div>
+                                <div className="mt-2 text-xs font-bold text-amber-600 uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all">
+                                    See Orders <ArrowUpRight className="w-3.5 h-3.5" />
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() => navigate('/seller/reviews')}
+                                className="group p-6 rounded-2xl bg-gradient-to-br from-violet-50 to-fuchsia-50 border border-violet-100 hover:border-violet-300 hover:shadow-lg hover:shadow-violet-100/50 transition-all duration-300 flex flex-col items-center text-center gap-4"
+                            >
+                                <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-violet-600 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                                    <Star className="w-7 h-7" />
+                                </div>
+                                <div>
+                                    <h4 className="text-lg font-bold text-slate-900 mb-1">Read Reviews</h4>
+                                    <p className="text-sm text-slate-500">See feedback and ratings on your books.</p>
+                                </div>
+                                <div className="mt-2 text-xs font-bold text-violet-600 uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all">
+                                    Open Reviews <ArrowUpRight className="w-3.5 h-3.5" />
                                 </div>
                             </button>
                         </div>

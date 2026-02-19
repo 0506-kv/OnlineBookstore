@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Menu, X, Search, BookOpen, Sparkles, Heart } from 'lucide-react';
+import { Menu, X, BookOpen, Sparkles, Heart } from 'lucide-react';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -17,9 +18,8 @@ const Navbar = () => {
 
     const navLinks = [
         { name: 'Home', path: '/' },
-        { name: 'Categories', path: '/categories' },
-        { name: 'Best Sellers', path: '/bestsellers' },
-        { name: 'About', path: '/about' }
+        { name: 'About', path: '/about' },
+        { name: 'Contact Us', path: '/contact' }
     ];
 
     return (
@@ -39,8 +39,8 @@ const Navbar = () => {
                         <BookOpen size={22} className="text-white" />
                     </motion.div>
                     <span className="text-2xl font-bold">
-                        <span className="text-emerald-600">Read</span>
-                        <span className="text-gray-900">ora</span>
+                        {/* <span className="text-emerald-600">Read</span> */}
+                        <span className="text-gray-900">Readora</span>
                     </span>
                 </Link>
 
@@ -62,17 +62,10 @@ const Navbar = () => {
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="p-2.5 text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all"
+                        onClick={() => setIsLiked(!isLiked)}
+                        className={`p-2.5 rounded-xl transition-all ${isLiked ? 'text-red-500 bg-red-50' : 'text-gray-600 hover:text-red-500 hover:bg-red-50'}`}
                     >
-                        <Search size={20} />
-                    </motion.button>
-
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="p-2.5 text-gray-600 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
-                    >
-                        <Heart size={20} />
+                        <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
                     </motion.button>
 
                     <Link
@@ -92,17 +85,6 @@ const Navbar = () => {
                             Get Started
                         </motion.button>
                     </Link>
-
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="relative p-2.5 text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all"
-                    >
-                        <ShoppingCart size={20} />
-                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs rounded-full flex items-center justify-center font-bold shadow-lg">
-                            0
-                        </span>
-                    </motion.button>
                 </div>
 
                 {/* Mobile Menu Button */}

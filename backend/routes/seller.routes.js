@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { body } = require("express-validator");
 const sellerController = require('../controllers/seller.controller');
+const authMiddleware = require('../middlewares/auth.middleware');
 
 router.post('/register', [
     body('email').isEmail().withMessage('Invalid Email'),
@@ -19,5 +20,6 @@ router.post('/login', [
 )
 
 router.get('/all', sellerController.allSellers);
+router.delete('/admin/:id', authMiddleware.authAdmin, sellerController.deleteSeller);
 
 module.exports = router;

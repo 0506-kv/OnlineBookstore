@@ -9,7 +9,7 @@ const SellerFooter = () => {
             title: 'Quick Links',
             links: [
                 { label: 'Dashboard', href: '/seller/home' },
-                { label: 'My Books', href: '/seller/my-books' },
+                { label: 'My Books', href: '/seller/sell' },
                 { label: 'Products', href: '/seller/products' },
                 { label: 'Analytics', href: '/seller/analytics' },
             ],

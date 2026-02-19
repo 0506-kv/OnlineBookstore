@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const UserFooter = () => {
     return (
@@ -11,9 +12,9 @@ const UserFooter = () => {
                 <div style={styles.section}>
                     <h4 style={styles.subtitle}>Quick Links</h4>
                     <ul style={styles.list}>
-                        <li style={styles.listItem}><a href="#" style={styles.link}>Home</a></li>
-                        <li style={styles.listItem}><a href="#" style={styles.link}>About Us</a></li>
-                        <li style={styles.listItem}><a href="#" style={styles.link}>Contact</a></li>
+                        <li style={styles.listItem}><Link to="/" style={styles.link}>Home</Link></li>
+                        <li style={styles.listItem}><Link to="/about" style={styles.link}>About Us</Link></li>
+                        <li style={styles.listItem}><Link to="/contact" style={styles.link}>Contact</Link></li>
                     </ul>
                 </div>
                 <div style={styles.section}>
