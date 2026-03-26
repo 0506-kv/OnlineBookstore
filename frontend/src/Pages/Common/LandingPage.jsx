@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "react-hot-toast";
 import {
   ArrowRight,
   Star,
@@ -21,6 +22,7 @@ const LandingBookCard = ({ book }) => {
   const [coverUrl, setCoverUrl] = useState("");
   const [coverLoaded, setCoverLoaded] = useState(false);
   const [coverSource, setCoverSource] = useState("");
+  const loginPrompt = "register/login to view the book";
 
   const coverTitle = book.title?.trim() || "";
   const coverAuthor = book.author?.trim() || "";
@@ -119,13 +121,48 @@ const LandingBookCard = ({ book }) => {
     }
   };
 
+  const showLoginPrompt = () => {
+    toast.custom(
+      () => (
+        <div className="pointer-events-auto w-full max-w-sm rounded-2xl border border-gray-200 bg-white shadow-md">
+          <div className="flex items-start gap-3 p-4">
+            <div className="mt-0.5 h-10 w-1 rounded-full bg-emerald-500" />
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-gray-900">Login required</p>
+              <p className="mt-1 text-sm leading-6 text-gray-600">
+                {loginPrompt}
+              </p>
+            </div>
+            <Shield size={18} className="mt-1 flex-shrink-0 text-emerald-500" />
+          </div>
+        </div>
+      ),
+      {
+        id: "login-required",
+        duration: 3000,
+      },
+    );
+  };
+
+  const handleCardKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      showLoginPrompt();
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       whileHover={{ y: -10 }}
-      className="group h-full"
+      className="group h-full cursor-pointer"
+      onClick={showLoginPrompt}
+      onKeyDown={handleCardKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label={`${book.title} by ${book.author}. ${loginPrompt}`}
     >
       <div className="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 h-full flex flex-col">
         <div className="relative h-64 overflow-hidden bg-gray-100 flex-shrink-0">
