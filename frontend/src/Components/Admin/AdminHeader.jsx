@@ -28,6 +28,7 @@ const AdminHeader = ({ admin }) => {
                     <a href="/admin/control" style={styles.link}>Admin Control</a>
                     <a href="/admin/home" style={styles.link}>Dashboard</a>
                     <a href="/admin/orders" style={styles.link}>Orders</a>
+                    <a href="/admin/sales" style={styles.link}>Sales</a>
                 </nav>
 
                 {/* Desktop User Section */}
@@ -52,6 +53,7 @@ const AdminHeader = ({ admin }) => {
                 <a href="/admin/control" style={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Admin Control</a>
                 <a href="/admin/home" style={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Dashboard</a>
                 <a href="/admin/orders" style={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Orders</a>
+                <a href="/admin/sales" style={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Sales</a>
                 <div style={styles.mobileUserSection}>
                     <span style={styles.mobileUserName}>Admin: {admin?.email || 'Admin'}</span>
                     <button onClick={handleLogout} style={styles.mobileLogoutBtn}>Logout</button>
