@@ -20,6 +20,7 @@ import SellerBookReviews from './Pages/Seller/SellerBookReviews';
 import AdminHomePage from './Pages/Admin/AdminHomePage';
 import AdminControl from './Pages/Admin/AdminControl';
 import AdminOrders from './Pages/Admin/AdminOrders';
+import AdminSales from './Pages/Admin/AdminSales';
 import NotFoundPage from './Pages/Common/NotFoundPage';
 import { Toaster } from 'react-hot-toast';
 import SellerProtectedRoute from './Components/Seller/SellerProtectedRoute';
@@ -65,6 +66,7 @@ const App = () => {
           <Route path="/admin/control" element={<AdminControl />} />
           <Route path="/admin/home" element={<AdminHomePage />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
+          <Route path="/admin/sales" element={<AdminSales />} />
         </Route>
 
         {/* Catch-all */}

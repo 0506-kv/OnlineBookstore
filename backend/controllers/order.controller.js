@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator');
 const orderModel = require('../models/order.model');
 const bookModel = require('../models/book.model');
 const cartModel = require('../models/cart.model');
+const sellerModel = require('../models/seller.model');
 
 module.exports.placeOrder = async (req, res) => {
     const errors = validationResult(req);
@@ -198,6 +199,102 @@ module.exports.getAdminDeliveredOrders = async (req, res) => {
             .populate('bookId', 'name author price');
 
         res.status(200).json({ orders });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};
+
+module.exports.getAdminSales = async (req, res) => {
+    try {
+        const [deliveredOrders, sellers] = await Promise.all([
+            orderModel
+                .find({ status: 'delivered' })
+                .sort({ createdAt: -1 })
+                .populate('userId', 'fullname email')
+                .lean(),
+            sellerModel.find().select('storename email').lean()
+        ]);
+
+        const sellerSalesMap = new Map(
+            sellers.map((seller) => [
+                String(seller._id),
+                {
+                    sellerId: String(seller._id),
+                    storename: seller.storename,
+                    email: seller.email,
+                    totalBooksSold: 0,
+                    totalSalesAmount: 0,
+                    orders: []
+                }
+            ])
+        );
+
+        deliveredOrders.forEach((order) => {
+            const sellerId = String(order.sellerId);
+
+            if (!sellerSalesMap.has(sellerId)) {
+                sellerSalesMap.set(sellerId, {
+                    sellerId,
+                    storename: 'Removed seller',
+                    email: 'Unavailable',
+                    totalBooksSold: 0,
+                    totalSalesAmount: 0,
+                    orders: []
+                });
+            }
+
+            const sellerEntry = sellerSalesMap.get(sellerId);
+            const quantity = Number(order.quantity) || 0;
+            const totalPrice = Number(order.totalPrice) || 0;
+
+            sellerEntry.totalBooksSold += quantity;
+            sellerEntry.totalSalesAmount += totalPrice;
+            sellerEntry.orders.push({
+                _id: String(order._id),
+                bookName: order.bookName,
+                bookAuthor: order.bookAuthor,
+                quantity,
+                totalPrice,
+                unitPrice: Number(order.unitPrice) || 0,
+                purchasedAt: order.purchasedAt,
+                createdAt: order.createdAt,
+                contactPhone: order.contactPhone || '',
+                shippingAddress: order.shippingAddress || null,
+                user: {
+                    fullname: order.userId?.fullname || 'Customer',
+                    email: order.userId?.email || 'Unavailable'
+                }
+            });
+        });
+
+        const sellerSales = Array.from(sellerSalesMap.values())
+            .map((seller) => ({
+                sellerId: seller.sellerId,
+                storename: seller.storename,
+                email: seller.email,
+                totalBooksSold: Number(seller.totalBooksSold) || 0,
+                totalSalesAmount: Number(seller.totalSalesAmount) || 0,
+                orders: seller.orders || []
+            }))
+            .sort((a, b) => {
+                if (b.totalSalesAmount !== a.totalSalesAmount) {
+                    return b.totalSalesAmount - a.totalSalesAmount;
+                }
+
+                return (a.storename || '').localeCompare(b.storename || '');
+            });
+
+        const totalSalesAmount = sellerSales.reduce(
+            (sum, seller) => sum + Number(seller.totalSalesAmount || 0),
+            0
+        );
+
+        const totalBooksSold = sellerSales.reduce(
+            (sum, seller) => sum + Number(seller.totalBooksSold || 0),
+            0
+        );
+
+        res.status(200).json({ totalBooksSold, totalSalesAmount, sellers: sellerSales });
     } catch (err) {
         res.status(500).json({ message: 'Server error', error: err.message });
     }
