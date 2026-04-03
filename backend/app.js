@@ -19,6 +19,7 @@ const bookRoutes = require('./routes/book.route');
 const orderRoutes = require('./routes/order.routes');
 const cartRoutes = require('./routes/cart.routes');
 const reviewRoutes = require('./routes/review.routes');
+const healthRoutes = require('./routes/health.routes');
 
 app.use('/users', userRoutes);
 app.use('/sellers', sellerRoutes);
@@ -26,6 +27,7 @@ app.use('/books', bookRoutes);
 app.use('/orders', orderRoutes);
 app.use('/cart', cartRoutes);
 app.use('/reviews', reviewRoutes);
+app.use('/api', healthRoutes);
 
 // CONNECTION TO DATABASE
 const connectToDb = require('./db/db');
