@@ -87,30 +87,30 @@ function RoleCard({ role, index }) {
 
 export default function LoginPage() {
     return (
-        <div className="h-screen bg-gradient-to-br from-amber-50/50 via-white to-emerald-50/50 flex flex-col relative overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-br from-amber-50/50 via-white to-emerald-50/50 flex flex-col relative overflow-x-hidden">
             {/* Animated Background Blobs */}
             <motion.div
                 animate={{ scale: [1, 1.2, 1], x: [0, 30, 0], y: [0, -20, 0] }}
                 transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-br from-emerald-200/50 to-teal-200/50 rounded-full blur-3xl"
+                className="absolute top-10 right-0 sm:top-20 sm:right-20 w-48 h-48 sm:w-72 sm:h-72 bg-gradient-to-br from-emerald-200/50 to-teal-200/50 rounded-full blur-3xl"
             />
             <motion.div
                 animate={{ scale: [1, 1.1, 1], x: [0, -20, 0], y: [0, 30, 0] }}
                 transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-br from-blue-200/50 to-cyan-200/50 rounded-full blur-3xl"
+                className="absolute bottom-10 left-0 sm:bottom-20 sm:left-20 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-br from-blue-200/50 to-cyan-200/50 rounded-full blur-3xl"
             />
             <motion.div
                 animate={{ scale: [1, 1.15, 1] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                className="absolute top-1/2 left-1/3 w-64 h-64 bg-gradient-to-br from-amber-200/40 to-orange-200/40 rounded-full blur-3xl"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 sm:left-1/3 sm:translate-x-0 w-44 h-44 sm:w-64 sm:h-64 bg-gradient-to-br from-amber-200/40 to-orange-200/40 rounded-full blur-3xl"
             />
 
             {/* Main Content */}
-            <main className="relative z-10 container mx-auto px-6 py-8 flex flex-col items-center justify-center flex-grow">
+            <main className="relative z-10 container mx-auto px-4 sm:px-6 pt-20 pb-10 sm:py-8 flex flex-col items-center justify-center flex-grow">
                 {/* Back to Home */}
                 <Link
                     to="/"
-                    className="absolute top-8 left-8 flex items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors font-medium group"
+                    className="absolute top-5 left-4 sm:top-8 sm:left-8 flex items-center gap-2 text-sm sm:text-base text-gray-500 hover:text-emerald-600 transition-colors font-medium group"
                 >
                     <motion.div whileHover={{ x: -3 }}>
                         <ArrowRight className="w-4 h-4 rotate-180" />
@@ -123,27 +123,27 @@ export default function LoginPage() {
                     initial={{ opacity: 0, y: -30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="text-center max-w-2xl mx-auto mb-10"
+                    className="text-center max-w-2xl mx-auto mb-8 sm:mb-10"
                 >
                     <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ delay: 0.2, type: "spring" }}
-                        className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl shadow-xl shadow-emerald-500/30 mb-4"
+                        className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl shadow-xl shadow-emerald-500/30 mb-4"
                     >
-                        <BookOpen size={30} className="text-white" />
+                        <BookOpen size={28} className="text-white" />
                     </motion.div>
 
-                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
                         Welcome Back! 👋
                     </h1>
-                    <p className="text-xl text-gray-500">
+                    <p className="text-base sm:text-xl text-gray-500">
                         Choose your account type to continue
                     </p>
                 </motion.div>
 
                 {/* Cards Grid */}
-                <div className="flex flex-col md:flex-row gap-10 w-full max-w-4xl justify-center items-stretch">
+                <div className="flex flex-col md:flex-row gap-5 sm:gap-10 w-full max-w-4xl justify-center items-stretch">
                     {ROLES.map((role, idx) => (
                         <div key={role.id} className="w-full md:w-1/2 flex">
                             <RoleCard role={role} index={idx} />
@@ -156,9 +156,9 @@ export default function LoginPage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="mt-10 text-center"
+                    className="mt-8 sm:mt-10 text-center"
                 >
-                    <p className="text-gray-500 mb-6 text-lg">
+                    <p className="text-gray-500 mb-5 sm:mb-6 text-base sm:text-lg">
                         New to Readora? <span className="text-2xl">🎉</span>
                     </p>
                     <Link to="/register">
