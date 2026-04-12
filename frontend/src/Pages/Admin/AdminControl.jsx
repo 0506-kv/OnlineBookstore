@@ -41,23 +41,22 @@ const AdminControl = () => {
                             <span className="pro-meta__item">Role: Admin</span>
                         </div>
                     </div>
-                    <h1 className="pro-hero__title">Account Administration</h1>
+                    <h1 className="pro-hero__title">Manage Users and Sellers</h1>
                     <p className="pro-hero__subtitle">
-                        Manage users and sellers with clear, auditable actions. Deletions remove associated data
-                        according to platform policy, while preserving completed order history.
+                        View accounts and remove them when needed.
                     </p>
                     <div className="pro-hero__grid">
                         <div>
-                            <div className="pro-hero__label">User deletion</div>
-                            <div className="pro-hero__value">Removes all reviews + placed orders</div>
+                            <div className="pro-hero__label">Users</div>
+                            <div className="pro-hero__value">Deletes reviews and placed orders</div>
                         </div>
                         <div>
-                            <div className="pro-hero__label">Seller deletion</div>
-                            <div className="pro-hero__value">Removes books + placed/shipped orders</div>
+                            <div className="pro-hero__label">Sellers</div>
+                            <div className="pro-hero__value">Deletes books and placed/shipped orders</div>
                         </div>
                         <div>
                             <div className="pro-hero__label">Delivered orders</div>
-                            <div className="pro-hero__value">Always retained</div>
+                            <div className="pro-hero__value">Kept</div>
                         </div>
                     </div>
                 </section>
@@ -65,17 +64,6 @@ const AdminControl = () => {
                 <section className="pro-stack">
                     <AllUsers />
                     <AllSellers />
-                </section>
-
-                <section className="pro-notes">
-                    <article className="pro-note">
-                        <h3>Confirmation required</h3>
-                        <p>Each delete action requires explicit confirmation to avoid accidental removal.</p>
-                    </article>
-                    <article className="pro-note">
-                        <h3>Consistent history</h3>
-                        <p>Delivered orders remain intact to preserve financial and fulfillment history.</p>
-                    </article>
                 </section>
             </main>
 

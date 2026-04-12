@@ -91,7 +91,7 @@ const AllUsers = () => {
                     </div>
                     <div className="pro-card__status">Syncing...</div>
                 </div>
-                <p className="pro-card__note">Loading user list from the registry.</p>
+                <p className="pro-card__note">Loading users.</p>
             </section>
         );
     }
@@ -133,13 +133,13 @@ const AllUsers = () => {
                 </div>
             </div>
             <p className="pro-card__note">
-                Deleting a user removes all of their reviews and placed orders. Other orders remain intact.
+                Deleting a user removes reviews and placed orders.
             </p>
             <div id={panelId} className="pro-card__panel">
                 {actionError && <div className="pro-card__error">{actionError}</div>}
                 {actionNotice && <div className="pro-card__notice">{actionNotice}</div>}
                 {users.length === 0 ? (
-                    <p className="pro-card__note">No users found in the registry.</p>
+                    <p className="pro-card__note">No users found.</p>
                 ) : (
                     <div className="pro-list">
                         {users.map((user, index) => (

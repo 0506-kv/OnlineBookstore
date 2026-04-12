@@ -91,7 +91,7 @@ const AllSellers = () => {
                     </div>
                     <div className="pro-card__status">Syncing...</div>
                 </div>
-                <p className="pro-card__note">Loading seller list from the registry.</p>
+                <p className="pro-card__note">Loading sellers.</p>
             </section>
         );
     }
@@ -133,13 +133,13 @@ const AllSellers = () => {
                 </div>
             </div>
             <p className="pro-card__note">
-                Deleting a seller removes their books and placed/shipped orders. Delivered orders remain intact.
+                Deleting a seller removes books and placed/shipped orders.
             </p>
             <div id={panelId} className="pro-card__panel">
                 {actionError && <div className="pro-card__error">{actionError}</div>}
                 {actionNotice && <div className="pro-card__notice">{actionNotice}</div>}
                 {sellers.length === 0 ? (
-                    <p className="pro-card__note">No sellers found in the registry.</p>
+                    <p className="pro-card__note">No sellers found.</p>
                 ) : (
                     <div className="pro-list">
                         {sellers.map((seller, index) => (
