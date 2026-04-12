@@ -28,25 +28,25 @@ const ROLES = [
 
 const RegisterPage = () => {
     return (
-        <div className="h-screen bg-gradient-to-br from-purple-50/50 via-white to-emerald-50/50 flex flex-col relative overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-br from-purple-50/50 via-white to-emerald-50/50 flex flex-col relative overflow-x-hidden">
             {/* Animated Background Blobs */}
             <motion.div
                 animate={{ scale: [1, 1.2, 1], x: [0, 30, 0], y: [0, -20, 0] }}
                 transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-br from-purple-200/50 to-pink-200/50 rounded-full blur-3xl"
+                className="absolute top-10 left-0 sm:top-20 sm:left-20 w-48 h-48 sm:w-72 sm:h-72 bg-gradient-to-br from-purple-200/50 to-pink-200/50 rounded-full blur-3xl"
             />
             <motion.div
                 animate={{ scale: [1, 1.1, 1], x: [0, -20, 0], y: [0, 30, 0] }}
                 transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-br from-emerald-200/50 to-teal-200/50 rounded-full blur-3xl"
+                className="absolute bottom-10 right-0 sm:bottom-20 sm:right-20 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-br from-emerald-200/50 to-teal-200/50 rounded-full blur-3xl"
             />
 
             {/* Main Content */}
-            <main className="relative z-10 container mx-auto px-6 py-8 flex flex-col items-center justify-center flex-grow">
+            <main className="relative z-10 container mx-auto px-4 sm:px-6 pt-20 pb-10 sm:py-8 flex flex-col items-center justify-center flex-grow">
                 {/* Back to Home */}
                 <Link
                     to="/"
-                    className="absolute top-8 left-8 flex items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors font-medium"
+                    className="absolute top-5 left-4 sm:top-8 sm:left-8 flex items-center gap-2 text-sm sm:text-base text-gray-500 hover:text-emerald-600 transition-colors font-medium"
                 >
                     <ArrowRight className="w-4 h-4 rotate-180" />
                     Back to Home
@@ -56,21 +56,21 @@ const RegisterPage = () => {
                 <motion.div
                     initial={{ opacity: 0, y: -30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-center max-w-2xl mx-auto mb-10"
+                    className="text-center max-w-2xl mx-auto mb-8 sm:mb-10"
                 >
                     <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ delay: 0.2, type: "spring" }}
-                        className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-xl shadow-purple-500/30 mb-4"
+                        className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-xl shadow-purple-500/30 mb-4"
                     >
-                        <Gift size={30} className="text-white" />
+                        <Gift size={28} className="text-white" />
                     </motion.div>
 
-                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
                         Join Readora! 🎉
                     </h1>
-                    <p className="text-xl text-gray-500">
+                    <p className="text-base sm:text-xl text-gray-500">
                         Create your account and start your reading journey
                     </p>
 
@@ -87,7 +87,7 @@ const RegisterPage = () => {
                 </motion.div>
 
                 {/* Cards Grid */}
-                <div className="flex flex-col md:flex-row gap-10 w-full max-w-4xl justify-center items-stretch">
+                <div className="flex flex-col md:flex-row gap-5 sm:gap-10 w-full max-w-4xl justify-center items-stretch">
                     {ROLES.map((role, idx) => (
                         <Link key={role.id} to={role.path} className="w-full md:w-1/2 flex">
                             <motion.div
@@ -136,12 +136,12 @@ const RegisterPage = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="mt-10 text-center"
+                    className="mt-8 sm:mt-10 text-center"
                 >
-                    <p className="text-gray-500 mb-4 text-lg">Already have an account?</p>
+                    <p className="text-gray-500 mb-4 text-base sm:text-lg">Already have an account?</p>
                     <Link
                         to="/login"
-                        className="inline-flex items-center gap-2 px-8 py-4 border-2 border-emerald-500 text-emerald-600 rounded-2xl font-bold text-lg hover:bg-emerald-600 hover:text-white transition-all shadow-lg hover:shadow-emerald-500/20"
+                        className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 border-2 border-emerald-500 text-emerald-600 rounded-2xl font-bold text-base sm:text-lg hover:bg-emerald-600 hover:text-white transition-all shadow-lg hover:shadow-emerald-500/20"
                     >
                         Sign In
                         <ArrowRight className="w-5 h-5" />
