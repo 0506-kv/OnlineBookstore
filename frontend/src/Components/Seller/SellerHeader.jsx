@@ -28,6 +28,21 @@ const SellerHeader = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    useEffect(() => {
+        setIsMenuOpen(false);
+    }, [location.pathname]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 1024) {
+                setIsMenuOpen(false);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('seller');
@@ -49,14 +64,14 @@ const SellerHeader = () => {
                     : 'bg-white/80 backdrop-blur-md border-b border-slate-100 py-3'
                     }`}
             >
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 sm:gap-4 lg:gap-6 xl:gap-8">
                     {/* Logo Section */}
-                    <div className="flex items-center gap-3 shrink-0 group cursor-pointer" onClick={() => navigate('/seller/home')}>
+                    <div className="flex min-w-0 items-center gap-3 shrink-0 group cursor-pointer" onClick={() => navigate('/seller/home')}>
                         <div className="w-12 h-12 bg-linear-to-br from-cyan-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:scale-105 transition-transform duration-300">
                             <Store className="text-white w-7 h-7" />
                         </div>
-                        <div className="hidden sm:block">
-                            <h1 className="text-xl font-bold text-slate-900 tracking-tight leading-none group-hover:text-cyan-600 transition-colors">
+                        <div className="hidden min-w-0 sm:block">
+                            <h1 className="max-w-[10rem] md:max-w-[14rem] xl:max-w-none truncate text-lg md:text-xl font-bold text-slate-900 tracking-tight leading-none group-hover:text-cyan-600 transition-colors">
                                 {seller.storename || 'Seller Portal'}
                             </h1>
                             <p className="text-[0.7rem] font-semibold text-slate-500 uppercase tracking-wider mt-0.5">
@@ -66,7 +81,7 @@ const SellerHeader = () => {
                     </div>
 
                     {/* Navigation */}
-                    <nav className="hidden md:flex items-center justify-center flex-1 gap-1">
+                    <nav className="hidden lg:flex items-center justify-center flex-1 gap-1 xl:gap-2 min-w-0">
                         {navItems.map((item) => {
                             const Icon = item.icon;
                             const isActive = location.pathname === item.path;
@@ -74,7 +89,7 @@ const SellerHeader = () => {
                                 <button
                                     key={item.path}
                                     onClick={() => navigate(item.path)}
-                                    className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 group ${isActive
+                                    className={`flex items-center gap-2 px-3 xl:px-4 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap transition-all duration-200 group ${isActive
                                         ? 'bg-cyan-50 text-cyan-600'
                                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                                         }`}
@@ -89,7 +104,7 @@ const SellerHeader = () => {
                     {/* Logout Button */}
                     <button
                         onClick={handleLogout}
-                        className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white rounded-lg text-sm font-semibold transition-all duration-300 shadow-sm shadow-red-500/10 hover:shadow-lg hover:shadow-red-500/30 hover:-translate-y-0.5 shrink-0"
+                        className="hidden lg:flex items-center gap-2 px-4 xl:px-5 py-2.5 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white rounded-lg text-sm font-semibold whitespace-nowrap transition-all duration-300 shadow-sm shadow-red-500/10 hover:shadow-lg hover:shadow-red-500/30 hover:-translate-y-0.5 shrink-0"
                     >
                         <LogOut className="w-4.5 h-4.5" />
                         <span>Logout</span>
@@ -98,7 +113,9 @@ const SellerHeader = () => {
                     {/* Mobile Menu Toggle */}
                     <button
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="md:hidden flex items-center justify-center p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                        className="lg:hidden flex items-center justify-center p-2.5 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors shrink-0"
+                        aria-expanded={isMenuOpen}
+                        aria-label={isMenuOpen ? 'Close seller navigation menu' : 'Open seller navigation menu'}
                     >
                         {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                     </button>
@@ -111,9 +128,9 @@ const SellerHeader = () => {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="md:hidden border-t border-slate-200 bg-white"
+                            className="lg:hidden border-t border-slate-200 bg-white"
                         >
-                            <div className="flex flex-col p-4 space-y-4 shadow-lg">
+                            <div className="flex max-h-[calc(100vh-5rem)] flex-col overflow-y-auto p-4 space-y-4 shadow-lg">
                                 {/* Seller Profile in Mobile Menu */}
                                 <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
                                     <div className="w-10 h-10 bg-linear-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center text-white font-bold">
