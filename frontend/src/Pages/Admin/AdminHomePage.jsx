@@ -89,6 +89,18 @@ const s = {
     statItem: { background: '#f8fafc', padding: '1rem', borderRadius: '12px', textAlign: 'center', border: '1px solid #e2e8f0' },
     statLabel: { display: 'block', fontSize: '0.8rem', color: '#64748b', marginBottom: '0.25rem' },
     statValue: { display: 'block', fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' },
+    btn: {
+        padding: '0.9rem 1.25rem',
+        background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '12px',
+        cursor: 'pointer',
+        fontWeight: 700,
+        fontSize: '0.95rem',
+        boxShadow: '0 10px 24px rgba(239, 68, 68, 0.28)',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+    },
 };
 
 export default AdminHomePage;

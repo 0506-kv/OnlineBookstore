@@ -4,6 +4,12 @@ import { useNavigate } from 'react-router-dom';
 const AdminHeader = ({ admin }) => {
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const navItems = [
+        { label: 'Dashboard', path: '/admin/home' },
+        { label: 'Admin Control', path: '/admin/control' },
+        { label: 'Orders', path: '/admin/orders' },
+        { label: 'Sales', path: '/admin/sales' },
+    ];
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -25,16 +31,22 @@ const AdminHeader = ({ admin }) => {
 
                 {/* Desktop Navigation */}
                 <nav style={styles.desktopNav} className="desktop-nav">
-                    <a href="/admin/control" style={styles.link}>Admin Control</a>
-                    <a href="/admin/home" style={styles.link}>Dashboard</a>
-                    <a href="/admin/orders" style={styles.link}>Orders</a>
-                    <a href="/admin/sales" style={styles.link}>Sales</a>
+                    {navItems.map((item) => (
+                        <button
+                            key={item.path}
+                            type="button"
+                            onClick={() => navigate(item.path)}
+                            style={styles.linkBtn}
+                        >
+                            {item.label}
+                        </button>
+                    ))}
+                    <button type="button" onClick={handleLogout} style={styles.logoutLinkBtn}>Logout</button>
                 </nav>
 
                 {/* Desktop User Section */}
                 <div style={styles.desktopUserSection} className="desktop-user-section">
                     <span style={styles.userName}>Admin: {admin?.email || 'Admin'}</span>
-                    <button onClick={handleLogout} style={styles.logoutBtn}>Logout</button>
                 </div>
 
                 {/* Mobile Hamburger Button */}
@@ -50,13 +62,31 @@ const AdminHeader = ({ admin }) => {
                 ...styles.mobileMenu,
                 ...(isMenuOpen ? styles.mobileMenuOpen : {})
             }}>
-                <a href="/admin/control" style={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Admin Control</a>
-                <a href="/admin/home" style={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Dashboard</a>
-                <a href="/admin/orders" style={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Orders</a>
-                <a href="/admin/sales" style={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Sales</a>
+                {navItems.map((item) => (
+                    <button
+                        key={item.path}
+                        type="button"
+                        style={styles.mobileLinkBtn}
+                        onClick={() => {
+                            navigate(item.path);
+                            setIsMenuOpen(false);
+                        }}
+                    >
+                        {item.label}
+                    </button>
+                ))}
+                <button
+                    type="button"
+                    onClick={() => {
+                        setIsMenuOpen(false);
+                        handleLogout();
+                    }}
+                    style={styles.mobileLogoutLinkBtn}
+                >
+                    Logout
+                </button>
                 <div style={styles.mobileUserSection}>
                     <span style={styles.mobileUserName}>Admin: {admin?.email || 'Admin'}</span>
-                    <button onClick={handleLogout} style={styles.mobileLogoutBtn}>Logout</button>
                 </div>
             </div>
 
@@ -106,35 +136,36 @@ const styles = {
         gap: '2rem',
         // Media query handling is done via class names and style tag
     },
-    link: {
-        textDecoration: 'none',
+    linkBtn: {
+        background: 'transparent',
+        border: 'none',
         color: '#cbd5e1',
         fontWeight: '500',
         transition: 'all 0.3s',
         fontSize: '0.95rem',
         cursor: 'pointer',
+        padding: 0,
+        fontFamily: 'inherit',
+    },
+    logoutLinkBtn: {
+        background: 'transparent',
+        border: 'none',
+        color: '#fca5a5',
+        fontWeight: '600',
+        transition: 'all 0.3s',
+        fontSize: '0.95rem',
+        cursor: 'pointer',
+        padding: 0,
+        fontFamily: 'inherit',
     },
     desktopUserSection: {
         display: 'flex',
         alignItems: 'center',
-        gap: '1.5rem',
     },
     userName: {
         color: '#e2e8f0',
         fontWeight: '600',
         fontSize: '0.9rem',
-    },
-    logoutBtn: {
-        padding: '0.6rem 1.2rem',
-        background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '8px',
-        cursor: 'pointer',
-        fontWeight: '600',
-        fontSize: '0.9rem',
-        transition: 'transform 0.2s, box-shadow 0.2s',
-        boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)',
     },
     // Mobile styles
     hamburger: {
@@ -185,24 +216,38 @@ const styles = {
         boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
     },
     mobileMenuOpen: {
-        maxHeight: '300px', // Adjust based on content
+        maxHeight: '380px',
         padding: '1rem 0 2rem',
     },
-    mobileLink: {
+    mobileLinkBtn: {
+        background: 'transparent',
+        border: 'none',
         color: '#cbd5e1',
-        textDecoration: 'none',
         fontSize: '1.1rem',
         fontWeight: '500',
         padding: '1rem',
         width: '100%',
         textAlign: 'center',
         transition: 'background 0.2s, color 0.2s',
+        fontFamily: 'inherit',
+    },
+    mobileLogoutLinkBtn: {
+        background: 'transparent',
+        border: 'none',
+        color: '#fca5a5',
+        fontSize: '1.1rem',
+        fontWeight: '600',
+        padding: '1rem',
+        width: '100%',
+        textAlign: 'center',
+        transition: 'background 0.2s, color 0.2s',
+        fontFamily: 'inherit',
+        cursor: 'pointer',
     },
     mobileUserSection: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '1rem',
         marginTop: '1rem',
         width: '100%',
     },
@@ -210,18 +255,6 @@ const styles = {
         color: '#94a3b8',
         fontSize: '0.9rem',
     },
-    mobileLogoutBtn: {
-        padding: '0.75rem 2rem',
-        background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '8px',
-        cursor: 'pointer',
-        fontWeight: '600',
-        fontSize: '1rem',
-        width: '80%',
-        maxWidth: '200px',
-    }
 };
 
 export default AdminHeader;
